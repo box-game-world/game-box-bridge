@@ -1,1 +1,1 @@
-# game-box-bridge
+# game-bridge
