@@ -1,5 +1,5 @@
 <template>
-  <div id="game" class="h-100">
+  <div id="index" class="h-100">
     <router-view/>
   </div>
 </template>
@@ -9,7 +9,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 
 @Component({})
-export default class Game extends Vue{
+export default class Index extends Vue{
 }
 </script>
 

@@ -9,7 +9,7 @@
         </h1>    
     </div>
     <div class="card-block h-100 text-center pt-5">
-      <router-link to="/world" class="btn btn-lg btn-primary btn-go"></router-link>
+      <router-link to="/game" class="btn btn-lg btn-primary btn-go"></router-link>
     </div>
     <div class="card-footer game-footer text-center">
       <small>https://github.com/box-game-world/game-worm-hole</small>

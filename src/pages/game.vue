@@ -1,7 +1,7 @@
 
 <template>
 <div class="w-100 h-100">
-  <stage class="w-100 h-100"></stage>
+  <world class="w-100 h-100"></world>
 </div>
 </template>
 
@@ -9,14 +9,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component' 
-import Stage from '../components/world/stage.vue'
+import World from '../components/world/world.vue'
 
 @Component({
   components:{
-    Stage
+    World
   }
 })
-export default class World extends Vue{
+export default class Game extends Vue{
   
 }
 </script>

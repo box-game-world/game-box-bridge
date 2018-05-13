@@ -2,11 +2,7 @@
 
 <template>
 <div clas="w-100 h-100" ref="stage">
-  <div class="w-100 h-100 canvas_wrapper" ref="world_wrapper">
-    <canvas :width="width" :height="height"></canvas>
-  </div>
-  <div class="w-100 h-100 canvas_wrapper" ref="bg_wrapper">
-    
+  <div class="w-100 h-100 canvas_wrapper" ref="game_world_wrapper">
   </div>
 </div>
 </template>
@@ -14,23 +10,29 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import * as PIXI from 'pixi.js' 
+import GameWorld from '@/game-core/game-world.ts'
 
 @Component({})
-export default class Stage extends Vue{
+export default class World extends Vue{
   
   public width:number=0;
-  public height:number=0;
+  public height:number=0; 
+  private _gameWorld:GameWorld;
 
   mounted():void{
     const stageRef:any = this.$refs.stage;
     this.width = stageRef.clientWidth;
     this.height = stageRef.clientHeight;
-    console.log( this.width, this.height );
-    this.createWordCanvas()
+    this.initWorld();
   }
 
-  createWordCanvas():void{
-    console.dir( this.$refs.world_wrapper );
+  initWorld():void{
+    this._gameWorld = new GameWorld( {
+      container:this.$refs.game_world_wrapper,
+      width:this.width,
+      height:this.height
+    });
   }
 }
 </script>

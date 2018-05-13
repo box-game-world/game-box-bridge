@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Main from '../pages/main.vue'
-import World from '../pages/world.vue'
+import Game from '../pages/game.vue'
 
 Vue.use(Router)
  
@@ -12,8 +12,8 @@ export default new Router({
       component: Main
     },
     {
-      path: '/world',
-      component: World  
+      path: '/game',
+      component: Game  
     }
   ]
 })
