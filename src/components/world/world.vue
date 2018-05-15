@@ -28,11 +28,7 @@ export default class World extends Vue{
   }
 
   initWorld():void{
-    this._gameWorld = new GameWorld( {
-      container:this.$refs.game_world_wrapper,
-      width:this.width,
-      height:this.height
-    });
+    this._gameWorld = new GameWorld( {container:this.$refs.game_world_wrapper});
   }
 }
 </script>

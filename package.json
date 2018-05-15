@@ -17,6 +17,7 @@
     "@types/pixi.js": "^4.7.3",
     "bootstrap-vue": "^2.0.0-rc.9",
     "matter-js": "^0.14.1",
+    "poly-decomp": "^0.2.1",
     "sass-loader": "^7.0.1",
     "style-loader": "^0.21.0",
     "vue": "^2.5.2",
