@@ -10,8 +10,8 @@ export default class StartingBlock extends PhysicalBody{
   }
 
   protected _generatorVertices():Vertex[]{
-    const width:number = 100;
-    const height:number = 100;
+    const width:number = 80;
+    const height:number = 200;
     return [ 
       { x:0, y:0 },
       { x:width, y:-20 },

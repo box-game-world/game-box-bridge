@@ -25,7 +25,7 @@ export default class PhysicalBody{
   }
 
   public set x( value:number ){
-    Body.translate( this._body, { x:value, y:this.y } );
+    Body.setPosition( this._body, { x:value, y:this.y } );
   }
 
   public get x():number{
@@ -33,7 +33,7 @@ export default class PhysicalBody{
   }
 
   public set y( value:number ){
-    Body.translate( this._body, { x:this.x, y:value } );
+    Body.setPosition( this._body, { x:this.x, y:value } );
   }
 
   public get y():number{
@@ -49,6 +49,7 @@ export default class PhysicalBody{
       0, 0, 
       ( config && config.vertices ) ? config.vertices : this._generatorVertices(), 
       ( config && config.options ) ? config.options : null );
+
     
     World.add( world, this.body );
     this._render();
@@ -68,7 +69,7 @@ export default class PhysicalBody{
   protected _drawPathBefore( vertices:Vertex[] ):void{
     this._graphics.clear();
     // this.beginFill(0xf1f1f1);
-    this._graphics.lineStyle( 1,0x555555, 1 );
+    this._graphics.lineStyle( 1,0xaaaaaa, 1 );
   }
 
   protected _drawPath( vertices:Vertex[] ):void{
@@ -88,7 +89,6 @@ export default class PhysicalBody{
   }
   
   protected _updatedBefore():void{
-    
   }
 
   protected _update():void{

@@ -1,7 +1,7 @@
 
 import Vertex from './interfaces/vertex'
 import PhysicalBody from './physical-body'
-import { World } from 'matter-js'
+import { World, Events } from 'matter-js'
 
 export default class User extends PhysicalBody{
 

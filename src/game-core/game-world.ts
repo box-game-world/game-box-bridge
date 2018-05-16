@@ -5,7 +5,8 @@ import * as PIXI from 'pixi.js'
 import Mountain from './mountain'
 import User from './user'
 import StartingBlock from './starting-block'
-import {Engine, Render, World, Bodies } from 'matter-js'
+import { Engine, World, Bodies, Events } from 'matter-js'
+import PhysicalBody from './physical-body';
 
 export default class GameWorld{
 
@@ -21,10 +22,11 @@ export default class GameWorld{
   private _world:World;
   private _app:PIXI.Application;
   private _matterEngine:Engine;
-  private _matterRender:Render;
   private _user:User;
+  private _user2:User; 
   private _startingBlock:StartingBlock;
   private _mountain:Mountain;
+  private _bodies:PhysicalBody[] = [];
 
 
   public static GET_STAGE_SIZE():{ width:number, height:number }{
@@ -52,27 +54,38 @@ export default class GameWorld{
     this.stage.scale.y = GameWorld.STAGE_RATIO_HEIGHT;
     style.width = style.height = '100%';
     container.appendChild( this._app.view );
-    
+
     this._user = new User( this._world );
-    this._user.x = 10;
-    this._user.y = 50;
-    this.addChild( this._user.sprite );
+    this._user.x = 50;
+    this._user.y = 200;
+    this.addBody( this._user );
+
+    // this._user2 = new User( this._world );
+    // this._user2.x = 50;
+    // this._user2.y = 200;
+    // this.addBody( this._user2 );
     
     this._startingBlock = new StartingBlock( this._world );
-    this._startingBlock.x = 0;
+    this._startingBlock.x = 50;
     this._startingBlock.y = 500;
-    this.addChild( this._startingBlock.sprite );
+    this.addBody( this._startingBlock );
 
     Engine.run( this._matterEngine );
     this.app.ticker.add( this.update.bind( this ) ); 
+    
+    Events.on( this._matterEngine, 'collisionStart', (event) => {
+      console.log(event);
+  });
   }
 
-  addChild( child:PIXI.DisplayObject ):void{
-    this.stage.addChild( child );
+  addBody( body:PhysicalBody ):void{
+    this._bodies.push( body );
+    this.stage.addChild( body.sprite );
   }
 
   update( delta:number ):void{ 
-    this._user.update();
-    this._startingBlock.update();
+    for( let i=0, count=this._bodies.length ; i<count ; i+=1 ){
+      this._bodies[ i ].update();
+    }
   }
 }
