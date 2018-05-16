@@ -96,6 +96,9 @@ export default class PhysicalBody{
     this._sprite.x = position.x;
     this._sprite.y = position.y;
     this._sprite.rotation = this._body.angle;
+    if( this._body.label === "User" ) {
+      // console.log( this._body );
+    }
   }
 
   protected _updatedAfter():void{

@@ -74,7 +74,13 @@ export default class GameWorld{
     this.app.ticker.add( this.update.bind( this ) ); 
     
     Events.on( this._matterEngine, 'collisionStart', (event) => {
-      console.log(event);
+      const pairs = event.pairs;
+      for( let i=0, count=pairs.length ; i<count ; i+=1 ){
+        const p = pairs[i];
+        const bodyA = p.bodyA;
+        const bodyB = p.bodyB;
+        console.log( bodyA, bodyB );
+      } 
   });
   }
 
