@@ -23,7 +23,6 @@ export default class GameWorld{
   private _app:PIXI.Application;
   private _matterEngine:Engine;
   private _user:User;
-  private _user2:User; 
   private _startingBlock:StartingBlock;
   private _mountain:Mountain;
   private _bodies:PhysicalBody[] = [];
@@ -47,6 +46,7 @@ export default class GameWorld{
 
   constructor( { container } ){
     this._matterEngine = Engine.create();
+    this._matterEngine.enableSleeping = true;
     this._world = this._matterEngine.world;
     this._app = new PIXI.Application( GameWorld.RESOLUTION_WIDTH, GameWorld.RESOLUTION_HEIGHT, { antialias:false, backgroundColor:0xffffff} );
     const style:CSSStyleDeclaration = this._app.view.style;
@@ -57,31 +57,27 @@ export default class GameWorld{
 
     this._user = new User( this._world );
     this._user.x = 50;
-    this._user.y = 200;
+    this._user.y = 390;
     this.addBody( this._user );
 
-    // this._user2 = new User( this._world );
-    // this._user2.x = 50;
-    // this._user2.y = 200;
-    // this.addBody( this._user2 );
-    
     this._startingBlock = new StartingBlock( this._world );
-    this._startingBlock.x = 50;
+    this._startingBlock.x = 60;
     this._startingBlock.y = 500;
     this.addBody( this._startingBlock );
 
     Engine.run( this._matterEngine );
     this.app.ticker.add( this.update.bind( this ) ); 
     
+    /*
     Events.on( this._matterEngine, 'collisionStart', (event) => {
       const pairs = event.pairs;
       for( let i=0, count=pairs.length ; i<count ; i+=1 ){
         const p = pairs[i];
         const bodyA = p.bodyA;
         const bodyB = p.bodyB;
-        console.log( bodyA, bodyB );
       } 
-  });
+    });
+    */
   }
 
   addBody( body:PhysicalBody ):void{

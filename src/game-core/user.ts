@@ -11,8 +11,8 @@ export default class User extends PhysicalBody{
   }
 
   protected _generatorVertices():Vertex[]{
-    const width:number = 20;
-    const height:number = 20;
+    const width:number = 15;
+    const height:number = 10;
     return [
       { x:0, y:0 },
       { x:width, y:0 },
