@@ -1,19 +1,22 @@
 
-import * as PIXI from 'pixi.js'
-import { random } from 'lodash'
-import GameWorld from './game-world'
-import { Bodies } from 'matter-js'
-import PhysicalGraphics from './physical-graphics';
 import Vertex from './interfaces/vertex'
+import PhysicalBody from './physical-body'
+import { World } from 'matter-js'
 
-export default class User extends PhysicalGraphics{
+export default class User extends PhysicalBody{
+
+  constructor( world:World ){
+    super( world );
+  }
 
   protected _generatorVertices():Vertex[]{
+    const width:number = 20;
+    const height:number = 20;
     return [
       { x:0, y:0 },
-      { x:70, y:0 },
-      { x:70, y:70 }, 
-      { x:0, y:70 },
+      { x:width, y:0 },
+      { x:width, y:height }, 
+      { x:0, y:height },
     ];
   }
 }
