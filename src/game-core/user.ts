@@ -7,11 +7,14 @@ export default class User extends PhysicalBody{
 
   constructor( world:World ){
     super( world );
+  }
+
+  protected _initialzed():void{
     this._body.label = 'User';
   }
 
   protected _generatorVertices():Vertex[]{
-    const width:number = 15;
+    const width:number = 10;
     const height:number = 10;
     return [
       { x:0, y:0 },
@@ -23,9 +26,5 @@ export default class User extends PhysicalBody{
 
   protected _updatedAfter():void{
     super._updatedAfter();
-    if( this._body.isCollide ){
-      this._body.isStatic = true;
-      this._body.isCollide = false;
-    }
   }
 }

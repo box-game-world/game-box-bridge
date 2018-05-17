@@ -7,10 +7,15 @@ import Vertex from './interfaces/vertex'
 
 export default class PhysicalBody{
 
+  protected _world:World;
+  protected _config:{ vertices?:Vertex[], bodyOptions?:any, ptions?:any };
+  protected _vertices:Vertex[]|undefined;
+  protected _bodyOptions:any;
+  protected _options:any;
   protected _sprite:PIXI.Sprite;
   protected _graphics:PIXI.Graphics;
   protected _body:Body;
-  protected _options:any;
+  protected _isInitialize:boolean = false;
 
   public get sprite():PIXI.Sprite{
     return this._sprite;
@@ -40,19 +45,62 @@ export default class PhysicalBody{
     return this._body.position.y;
   }
 
-  constructor( world:World, config?:{ vertices?:Vertex[], options?:any } ){
-    this._sprite = new PIXI.Sprite();
-    this._graphics = new PIXI.Graphics();
-    this._sprite.addChild( this._graphics );
-    this._sprite.anchor.set( 0.5, 0.5 );
-    this._body = Bodies.fromVertices( 
-      0, 0, 
-      ( config && config.vertices ) ? config.vertices : this._generatorVertices(), 
-      ( config && config.options ) ? config.options : null );
+  public get width():number{
+    return this._graphics.width;
+  }
 
-    
-    World.add( world, this.body );
+  public get height():number{
+    return this._graphics.height;
+  }
+
+  public set leftTopX( value:number ){
+    this.x = this.width/2+value;
+  }
+
+  public get leftTopX():number{
+    return this.x - ( this.width/2 );
+  }
+
+  public set leftTopY( value:number ){
+    this.y = this.height/2+value;
+  }
+
+  public get leftTopY():number{
+    return this.y - ( this.height/2 );
+  }
+
+  public get isInitialized():boolean{
+    return this._isInitialize;
+  }
+
+  constructor( world:World, config?:{ vertices?:Vertex[], bodyOptions?:any, options?:any } ){
+    this._world = world;
+    if( config ){
+      this._vertices = config.vertices;
+      this._bodyOptions = config.bodyOptions;
+      this._options = config.options;
+    }
+    this._preInitialze();
+    this._createGraphics();
+    this._createSprite();
+    this._createBody();
     this._render();
+    this._isInitialize = true;
+    this._initialzed();
+  }
+
+  public update():void{
+    this._updatedBefore();
+    this._update();
+    this._updatedAfter();
+  }
+
+  protected _preInitialze():void{
+
+  }
+
+  protected _initialzed():void{
+
   }
 
   protected _generatorVertices():Vertex[]{
@@ -69,7 +117,7 @@ export default class PhysicalBody{
   protected _drawPathBefore( vertices:Vertex[] ):void{
     this._graphics.clear();
     // this.beginFill(0xf1f1f1);
-    this._graphics.lineStyle( 1,0xaaaaaa, 1 );
+    this._graphics.lineStyle( 1,0xdedede, 1 );
   }
 
   protected _drawPath( vertices:Vertex[] ):void{
@@ -96,18 +144,27 @@ export default class PhysicalBody{
     this._sprite.x = position.x;
     this._sprite.y = position.y;
     this._sprite.rotation = this._body.angle;
-    if( this._body.label === "User" ) {
-      // console.log( this._body );
-    }
   }
 
   protected _updatedAfter():void{
     this._graphics.endFill();
   }
 
-  public update():void{
-    this._updatedBefore();
-    this._update();
-    this._updatedAfter();
+  private _createSprite():void{
+    this._sprite = new PIXI.Sprite();
+    this._sprite.addChild( this._graphics );
+    this._sprite.anchor.set( 0.5, 0.5 );
+  }
+
+  private _createGraphics():void{
+    this._graphics = new PIXI.Graphics();
+  }
+
+  private _createBody():void{
+    this._body = Bodies.fromVertices( 
+      0, 0, 
+      ( this._vertices ) ? this._vertices : this._generatorVertices(), 
+      ( this._bodyOptions && this._bodyOptions ) ? this._bodyOptions : null );
+    World.add( this._world, this.body );
   }
 }

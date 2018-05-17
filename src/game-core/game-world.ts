@@ -21,9 +21,8 @@ export default class GameWorld{
 
   private _world:World;
   private _app:PIXI.Application;
-  private _matterEngine:Engine;
+  private _worldEngine:Engine;
   private _user:User;
-  private _startingBlock:StartingBlock;
   private _mountain:Mountain;
   private _bodies:PhysicalBody[] = [];
 
@@ -45,9 +44,9 @@ export default class GameWorld{
   }
 
   constructor( { container } ){
-    this._matterEngine = Engine.create();
-    this._matterEngine.enableSleeping = true;
-    this._world = this._matterEngine.world;
+    this._worldEngine = Engine.create();
+    this._worldEngine.enableSleeping = true;
+    this._world = this._worldEngine.world;
     this._app = new PIXI.Application( GameWorld.RESOLUTION_WIDTH, GameWorld.RESOLUTION_HEIGHT, { antialias:false, backgroundColor:0xffffff} );
     const style:CSSStyleDeclaration = this._app.view.style;
     this.stage.scale.x = GameWorld.STAGE_RATIO_WIDTH;
@@ -55,21 +54,21 @@ export default class GameWorld{
     style.width = style.height = '100%';
     container.appendChild( this._app.view );
 
+    this._mountain = new Mountain( this._world, true );
+    this._mountain.leftTopX = 10;
+    this._mountain.leftTopY = GameWorld.BASE_HEIGHT - this._mountain.height - 100;
+    this.addBody( this._mountain );
+
     this._user = new User( this._world );
-    this._user.x = 50;
-    this._user.y = 390;
+    this._user.x = this._mountain.x; 
+    this._user.y = 100;
     this.addBody( this._user );
 
-    this._startingBlock = new StartingBlock( this._world );
-    this._startingBlock.x = 60;
-    this._startingBlock.y = 500;
-    this.addBody( this._startingBlock );
-
-    Engine.run( this._matterEngine );
+    Engine.run( this._worldEngine );
     this.app.ticker.add( this.update.bind( this ) ); 
-    
+
     /*
-    Events.on( this._matterEngine, 'collisionStart', (event) => {
+    Events.on( this._worldEngine, 'collisionStart', (event) => {
       const pairs = event.pairs;
       for( let i=0, count=pairs.length ; i<count ; i+=1 ){
         const p = pairs[i];
