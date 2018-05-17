@@ -3,7 +3,7 @@
 
 import * as PIXI from 'pixi.js'
 import { Bodies, Body, World } from 'matter-js'
-import Vertex from './interfaces/vertex'
+import { Vertex } from './interfaces'
 
 export default class PhysicalBody{
 
@@ -115,8 +115,8 @@ export default class PhysicalBody{
   }
   
   protected _drawPathBefore( vertices:Vertex[] ):void{
-    this._graphics.clear();
-    // this.beginFill(0xf1f1f1);
+    this._graphics.clear(); 
+    this._graphics.beginFill(0xffffff);
     this._graphics.lineStyle( 1,0xdedede, 1 );
   }
 

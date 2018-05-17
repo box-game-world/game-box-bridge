@@ -1,5 +1,5 @@
 
-import Vertex from './interfaces/vertex'
+import { Vertex } from './interfaces'
 import PhysicalBody from './physical-body'
 import { World, Events } from 'matter-js'
 

@@ -1,5 +1,5 @@
 
-import Vertex from './interfaces/vertex'
+import { Vertex } from './interfaces'
 import PhysicalBody from './physical-body'
 import { World } from 'matter-js'
 import { random } from 'lodash'
@@ -19,6 +19,9 @@ export default class Mountain extends PhysicalBody{
     this._widthRange = [ 30, 100 ];
     this._heightRange = [ 100, 300 ];
     this._diffHeightRange = [ 20, -20 ]; 
+  }
+
+  protected _initialzed():void{
   }
 
   protected _generatorVertices():Vertex[]{
