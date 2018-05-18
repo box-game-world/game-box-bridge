@@ -79,7 +79,7 @@ export default class GameWorld{
 
   private _initWormholeBall():void{
     this._wormholeBall = new WormholeBall( this._world );
-    this._wormholeBall.x = 30;
+    this._wormholeBall.x = 40;
     this._wormholeBall.y = 100;
     this._addBody( this._wormholeBall );
   }

@@ -12,6 +12,11 @@ export default class WormholeBall extends PhysicalBody{
 
   protected _initialzed():void{
     this._body.label = 'WormholeBall';
+    Body.setStatic( this._body, true );
+    setTimeout( ()=>{
+      Body.setStatic( this._body, false );
+      Body.applyForce( this._body, { x:this.x, y:this.y }, { x:0.0000000000001, y:0.0000000000001} );
+    },3000 )
   }
 
   protected _generatorVertices():Vertex[]{
