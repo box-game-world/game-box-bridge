@@ -147,7 +147,6 @@ export default class PhysicalBody{
   }
 
   protected _updatedAfter():void{
-    this._graphics.endFill();
   }
 
   private _createSprite():void{

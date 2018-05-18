@@ -11,3 +11,8 @@ export interface Rectangle{
   width:number;
   height:number;
 }
+
+export interface Vector{
+  radian:number;
+  length:number;
+}

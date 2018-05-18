@@ -8,6 +8,7 @@ import StartingBlock from './starting-block'
 import { Engine, World, Bodies, Events } from 'matter-js'
 import PhysicalBody from './physical-body';
 import InputManager from './input-manager';
+import WormholeBall from './wormhole-ball';
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 600;
@@ -19,6 +20,7 @@ export default class GameWorld{
   private _worldEngine:Engine;
   private _user:User;
   private _mountain:Mountain;
+  private _wormholeBall:WormholeBall;
   private _bodies:PhysicalBody[] = [];
   private _inputManager:InputManager;
 
@@ -44,6 +46,7 @@ export default class GameWorld{
     this._initInputManager();
     this._initMountain();
     this._initUser();
+    this._initWormholeBall();
   }
 
   private _initWorld():void{
@@ -74,6 +77,13 @@ export default class GameWorld{
     this._addBody( this._user );
   }
 
+  private _initWormholeBall():void{
+    this._wormholeBall = new WormholeBall( this._world );
+    this._wormholeBall.x = 30;
+    this._wormholeBall.y = 100;
+    this._addBody( this._wormholeBall );
+  }
+
   private _initMountain():void{
     this._mountain = new Mountain( this._world, true );
     this._mountain.leftTopX = 10;
@@ -81,13 +91,21 @@ export default class GameWorld{
     this._addBody( this._mountain );
   }
 
-
   private _addBody( body:PhysicalBody ):void{
     this._bodies.push( body );
     this.stage.addChild( body.sprite );
   }
 
   private _update( delta:number ):void{ 
+    this._proccessInput();
+    this._proccessUpdate();
+  }
+  
+  private _proccessInput():void{
+    this._user.setVector( this._inputManager.vector );
+  }
+
+  private _proccessUpdate():void{
     for( let i=0, count=this._bodies.length ; i<count ; i+=1 ){
       this._bodies[ i ].update();
     }
