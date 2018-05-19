@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Rectangle, Vertex, Vector } from './interfaces'
+import GameStatus from './game-status';
 
 
 export default class InputManager{
@@ -62,6 +63,7 @@ export default class InputManager{
     });
 
     stage.on( 'touchend', ( event:PIXI.interaction.InteractionEvent )=>{
+      GameStatus.AVAILABLE_FIRE = true;
     })
 
   }

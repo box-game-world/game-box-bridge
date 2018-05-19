@@ -117,7 +117,8 @@ export default class PhysicalBody{
   protected _drawPathBefore( vertices:Vertex[] ):void{
     this._graphics.clear(); 
     this._graphics.beginFill(0xffffff);
-    this._graphics.lineStyle( 1,0xdedede, 1 );
+    // this._graphics.lineStyle( 1,0xdedede, 1 );
+    this._graphics.lineStyle( 1,0, 1 );
   }
 
   protected _drawPath( vertices:Vertex[] ):void{

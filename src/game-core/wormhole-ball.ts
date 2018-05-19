@@ -12,14 +12,28 @@ export default class WormholeBall extends PhysicalBody{
 
   protected _initialzed():void{
     this._body.label = 'WormholeBall';
-    Body.setStatic( this._body, true );
-    setTimeout( ()=>{
-      Body.setStatic( this._body, false );
-      Body.applyForce( this._body, { x:this.x, y:this.y }, { x:0.0000000000001, y:0.0000000000001} );
-    },3000 )
+    this._deactive();
   }
 
   protected _generatorVertices():Vertex[]{
-    return Bodies.circle( 0, 0, 10 ).vertices;
+    return Bodies.circle( 0, 0, 5 ).vertices;
+  }
+
+  public setVector( vector:Vector ):void{
+    this._body.isSleep = false;
+    this._active();
+    const targetX:number = Math.cos( vector.radian ) * vector.length / 15000;
+    const targetY:number = Math.sin( vector.radian ) * vector.length / 15000;
+    Body.applyForce( this._body, { x:this.x, y:this.y }, { x:targetX, y:targetY} );
+  }
+
+  private _deactive():void{
+    Body.setStatic( this._body, true );
+    this._body.isSensor = true;
+  }
+
+  private _active():void{
+    Body.setStatic( this._body, false );
+    this._body.isSensor = false;
   }
 }

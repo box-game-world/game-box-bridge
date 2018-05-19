@@ -1,7 +1,7 @@
 
 import { Vertex, Vector } from './interfaces'
 import PhysicalBody from './physical-body'
-import { World, Events } from 'matter-js'
+import { World, Events, Body } from 'matter-js'
 import { Container } from 'pixi.js';
 
 export default class User extends PhysicalBody{
@@ -18,9 +18,9 @@ export default class User extends PhysicalBody{
     this._arrow = new VectorArrow();
     this.sprite.addChild( this._arrow );
 
-    // this._body.on( 'sleepStart' , ()=>{
-    //   this._body.isStatic = true;
-    // })
+    Events.on( this._body, 'sleepStart', ()=>{
+      Body.setStatic( this._body, true );
+    });
   }
 
   protected _generatorVertices():Vertex[]{

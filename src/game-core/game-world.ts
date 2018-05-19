@@ -9,6 +9,8 @@ import { Engine, World, Bodies, Events } from 'matter-js'
 import PhysicalBody from './physical-body';
 import InputManager from './input-manager';
 import WormholeBall from './wormhole-ball';
+import GameStatus from './game-status';
+import Ground from './ground';
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 600;
@@ -20,6 +22,8 @@ export default class GameWorld{
   private _worldEngine:Engine;
   private _user:User;
   private _mountain:Mountain;
+  private _mountain2:Mountain;
+  private _ground:Ground;
   private _wormholeBall:WormholeBall;
   private _bodies:PhysicalBody[] = [];
   private _inputManager:InputManager;
@@ -44,9 +48,10 @@ export default class GameWorld{
     this._initWorld();
     this._initStage( container );
     this._initInputManager();
+    this._initGround();
     this._initMountain();
-    this._initUser();
     this._initWormholeBall();
+    this._initUser();
   }
 
   private _initWorld():void{
@@ -70,6 +75,13 @@ export default class GameWorld{
     this._inputManager = new InputManager( { stage:this.stage, rectangle:{ x:0, y:0, width:STAGE_WIDTH, height:STAGE_HEIGHT } } );
   } 
 
+  private _initGround():void{
+    this._ground = new Ground( this._world );
+    this._addBody( this._ground );
+    this._ground.leftTopX = 0;
+    this._ground.leftTopY = STAGE_HEIGHT - this._ground.height;
+  }
+
   private _initUser():void{
     this._user = new User( this._world );
     this._user.x = this._mountain.x; 
@@ -79,16 +91,21 @@ export default class GameWorld{
 
   private _initWormholeBall():void{
     this._wormholeBall = new WormholeBall( this._world );
-    this._wormholeBall.x = 40;
-    this._wormholeBall.y = 100;
+    this._wormholeBall.x = this._mountain.x;
+    this._wormholeBall.y = this._mountain.leftTopY - ( this._wormholeBall.height/2 );
     this._addBody( this._wormholeBall );
   }
 
   private _initMountain():void{
     this._mountain = new Mountain( this._world, true );
-    this._mountain.leftTopX = 10;
-    this._mountain.leftTopY = STAGE_HEIGHT - this._mountain.height - 100;
+    this._mountain.leftTopX = 30;
+    this._mountain.leftTopY = this._ground.leftTopY - this._mountain.height;
     this._addBody( this._mountain );
+
+    this._mountain2 = new Mountain( this._world, true );
+    this._mountain2.leftTopX = STAGE_WIDTH - this._mountain2.width - 30;
+    this._mountain2.leftTopY = this._ground.leftTopY - this._mountain2.height;
+    this._addBody( this._mountain2 );
   }
 
   private _addBody( body:PhysicalBody ):void{
@@ -98,11 +115,20 @@ export default class GameWorld{
 
   private _update( delta:number ):void{ 
     this._proccessInput();
+    this._proccessGameStatus();
     this._proccessUpdate();
   }
   
   private _proccessInput():void{
     this._user.setVector( this._inputManager.vector );
+  }
+
+  private _proccessGameStatus():void{
+    // console.log( GameStatus.AVAILABLE_FIRE );
+    if( GameStatus.AVAILABLE_FIRE ){
+      this._wormholeBall.setVector( this._inputManager.vector );
+      GameStatus.AVAILABLE_FIRE = false;
+    }
   }
 
   private _proccessUpdate():void{
