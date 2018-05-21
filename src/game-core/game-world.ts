@@ -5,12 +5,13 @@ import * as PIXI from 'pixi.js'
 import Mountain from './mountain'
 import User from './user'
 import StartingBlock from './starting-block'
-import { Engine, World, Bodies, Events } from 'matter-js'
+import { Engine, World, Bodies, Events, Body } from 'matter-js'
 import PhysicalBody from './physical-body';
 import InputManager from './input-manager';
 import WormholeBall from './wormhole-ball';
 import GameStatus from './game-status';
 import Ground from './ground';
+import GameConfig from './game-config';
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 600;
@@ -52,11 +53,12 @@ export default class GameWorld{
     this._initMountain();
     this._initWormholeBall();
     this._initUser();
+    this._initCollisionProccess();
   }
 
   private _initWorld():void{
     this._worldEngine = Engine.create();
-    this._worldEngine.enableSleeping = true;
+    // this._worldEngine.enableSleeping = true;
     this._world = this._worldEngine.world;
     Engine.run( this._worldEngine );
   }
@@ -120,20 +122,62 @@ export default class GameWorld{
   }
   
   private _proccessInput():void{
-    this._user.setVector( this._inputManager.vector );
+    if( GameStatus.AVAILABLE_FIRE ){
+      this._user.setVector( this._inputManager.vector );
+      this._user.showArrow();
+    }else{
+      this._user.hideArrow();
+    }
   }
 
   private _proccessGameStatus():void{
-    // console.log( GameStatus.AVAILABLE_FIRE );
-    if( GameStatus.AVAILABLE_FIRE ){
+    if( GameStatus.IS_FIRE && !GameStatus.IS_SHOOTING ){
+      this._wormholeBall.x = this._user.x;
+      this._wormholeBall.y = this._user.y;
       this._wormholeBall.setVector( this._inputManager.vector );
-      GameStatus.AVAILABLE_FIRE = false;
+      this._wormholeBall.show();
+      GameStatus.IS_SHOOTING = true;
+      GameStatus.IS_FIRE = false;
+    }
+
+    if( !GameStatus.IS_SHOOTING ){
+      this._wormholeBall.hide();
     }
   }
 
   private _proccessUpdate():void{
     for( let i=0, count=this._bodies.length ; i<count ; i+=1 ){
       this._bodies[ i ].update();
+    }
+  }
+
+  private _initCollisionProccess():void{
+    const proccessMap:any = this._callisionProccessMap();
+
+    Events.on( this._worldEngine, 'collisionStart', ( event )=>{
+      if( event.pairs.length ){
+        const pair:any = event.pairs[ 0 ];
+        const bodyA:Body = pair.bodyA;
+        const proccessA:Function = proccessMap[ bodyA.label ]
+        const bodyB:Body = pair.bodyB;
+        const proccessB:Function = proccessMap[ bodyB.label ]
+        if( proccessA ){ proccessA( pair.bodyB, event  );  }
+        if( proccessB ){ proccessB( pair.bodyA, event  );  }
+      }
+    }); 
+  }
+
+  private _callisionProccessMap():any{
+    return {
+      [this._wormholeBall.label]:( target:Body, event )=>{
+        if( target.label === 'mountain' ){
+          this._wormholeBall.deactive();
+          this._user.x = this._wormholeBall.x;
+          this._user.y = this._wormholeBall.y-20;
+        }
+        GameStatus.IS_SHOOTING = false;
+        GameStatus.AVAILABLE_DRAG = true;
+      }
     }
   }
 }

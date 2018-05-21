@@ -14,12 +14,12 @@ export default class User extends PhysicalBody{
   }
 
   protected _initialzed():void{
-    this._body.label = 'User';
+    this._body.label = 'user';
     this._arrow = new VectorArrow();
     this.sprite.addChild( this._arrow );
 
     Events.on( this._body, 'sleepStart', ()=>{
-      Body.setStatic( this._body, true );
+      this.deactive();
     });
   }
 
@@ -41,6 +41,14 @@ export default class User extends PhysicalBody{
   public setVector( vector:Vector ):void{
     this._vector = vector;
     this._arrow.setVector( vector );
+  }
+
+  public showArrow():void{
+    this._arrow.visible = true;
+  }
+
+  public hideArrow():void{
+    this._arrow.visible = false;
   }
 }
 

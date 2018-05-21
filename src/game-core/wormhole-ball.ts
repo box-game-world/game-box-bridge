@@ -11,8 +11,9 @@ export default class WormholeBall extends PhysicalBody{
   }
 
   protected _initialzed():void{
-    this._body.label = 'WormholeBall';
-    this._deactive();
+    this._body.label = 'wormhole_ball';
+    this.deactive();
+    this.hide();
   }
 
   protected _generatorVertices():Vertex[]{
@@ -21,19 +22,9 @@ export default class WormholeBall extends PhysicalBody{
 
   public setVector( vector:Vector ):void{
     this._body.isSleep = false;
-    this._active();
+    this.active();
     const targetX:number = Math.cos( vector.radian ) * vector.length / 15000;
     const targetY:number = Math.sin( vector.radian ) * vector.length / 15000;
     Body.applyForce( this._body, { x:this.x, y:this.y }, { x:targetX, y:targetY} );
-  }
-
-  private _deactive():void{
-    Body.setStatic( this._body, true );
-    this._body.isSensor = true;
-  }
-
-  private _active():void{
-    Body.setStatic( this._body, false );
-    this._body.isSensor = false;
   }
 }

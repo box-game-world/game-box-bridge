@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Rectangle, Vertex, Vector } from './interfaces'
 import GameStatus from './game-status';
+import GameConfig from './game-config'
 
 
 export default class InputManager{
@@ -50,6 +51,7 @@ export default class InputManager{
 
     stage.interactive = true;
     stage.on( 'touchstart', ( event:PIXI.interaction.InteractionEvent )=>{
+      if( !GameStatus.AVAILABLE_DRAG ){ return; }
       this._touchStartPosition = event.data.global.clone();
     });
 
@@ -59,11 +61,15 @@ export default class InputManager{
       const yLength:number = this.touchMovePosition.y - this._touchStartPosition.y;
       const distance:number = ( Math.abs( xLength ) + Math.abs( yLength ) ) * 0.4;
       this._vector.radian = Math.atan2( yLength, xLength );
-      this._vector.length = distance;
+      this._vector.length = Math.max( distance, GameConfig.MIN_SHOOTING_POWER );
+      GameStatus.AVAILABLE_FIRE = distance > GameConfig.MIN_SHOOTING_POWER;
     });
 
     stage.on( 'touchend', ( event:PIXI.interaction.InteractionEvent )=>{
-      GameStatus.AVAILABLE_FIRE = true;
+      if( GameStatus.AVAILABLE_FIRE ){
+        GameStatus.IS_FIRE = true;
+        GameStatus.AVAILABLE_DRAG = false;
+      }
     })
 
   }

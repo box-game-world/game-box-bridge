@@ -22,6 +22,7 @@ export default class Mountain extends PhysicalBody{
   }
 
   protected _initialzed():void{
+    this._body.label = 'mountain';
   }
 
   protected _generatorVertices():Vertex[]{

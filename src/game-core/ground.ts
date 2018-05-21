@@ -11,7 +11,7 @@ export default class Ground extends PhysicalBody{
   }
 
   protected _initialzed():void{
-    this._body.label = 'Ground';
+    this._body.label = 'ground';
   }
 
   protected _generatorVertices():Vertex[]{

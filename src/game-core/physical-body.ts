@@ -17,6 +17,10 @@ export default class PhysicalBody{
   protected _body:Body;
   protected _isInitialize:boolean = false;
 
+  public get label():string{
+    return this._body.label;
+  }
+
   public get sprite():PIXI.Sprite{
     return this._sprite;
   }
@@ -93,6 +97,25 @@ export default class PhysicalBody{
     this._updatedBefore();
     this._update();
     this._updatedAfter();
+  }
+
+  public deactive():void{
+    Body.setStatic( this._body, true );
+    this._body.isSensor = true;
+  }
+
+  public active():void{
+    this._body.isSensor = false;
+    Body.setStatic( this._body, false );
+    Body.applyForce( this._body, { x:this.x, y:this.y }, { x:0, y:0.0000001} );
+  }
+
+  public show():void{
+    this._sprite.visible = true;
+  }
+
+  public hide():void{
+    this._sprite.visible = false;
   }
 
   protected _preInitialze():void{
