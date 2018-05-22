@@ -12,6 +12,7 @@ import WormholeBall from './wormhole-ball';
 import GameStatus from './game-status';
 import Ground from './ground';
 import GameConfig from './game-config';
+import WormholeBallIndicator from './wormhole-ball-indicator';
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 600;
@@ -26,6 +27,7 @@ export default class GameWorld{
   private _mountain2:Mountain;
   private _ground:Ground;
   private _wormholeBall:WormholeBall;
+  private _wormholeBallIndicator:WormholeBallIndicator;
   private _bodies:PhysicalBody[] = [];
   private _inputManager:InputManager;
 
@@ -52,6 +54,7 @@ export default class GameWorld{
     this._initGround();
     this._initMountain();
     this._initWormholeBall();
+    this._initWormholeBallIndicator();
     this._initUser();
     this._initCollisionProccess();
   }
@@ -98,6 +101,12 @@ export default class GameWorld{
     this._addBody( this._wormholeBall );
   }
 
+  private _initWormholeBallIndicator():void{
+    this._wormholeBallIndicator = new WormholeBallIndicator( this._wormholeBall );
+    this.stage.addChild( this._wormholeBallIndicator ); 
+    this._wormholeBallIndicator.visible = true;
+  }
+
   private _initMountain():void{
     this._mountain = new Mountain( this._world, true );
     this._mountain.leftTopX = 30;
@@ -117,8 +126,8 @@ export default class GameWorld{
 
   private _update( delta:number ):void{ 
     this._proccessInput();
-    this._proccessGameStatus();
     this._proccessUpdate();
+    this._proccessGameStatus();
   }
   
   private _proccessInput():void{
@@ -149,6 +158,7 @@ export default class GameWorld{
     for( let i=0, count=this._bodies.length ; i<count ; i+=1 ){
       this._bodies[ i ].update();
     }
+    this._wormholeBallIndicator.update();
   }
 
   private _initCollisionProccess():void{
