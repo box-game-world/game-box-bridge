@@ -13,6 +13,9 @@ import GameStatus from './game-status';
 import Ground from './ground';
 import GameConfig from './game-config';
 import WormholeBallIndicator from './wormhole-ball-indicator';
+import State from './states/abs-state';
+import ReadyState from './states/ready-state';
+import GameStateManager from './game-state-manager';
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 600;
@@ -30,6 +33,7 @@ export default class GameWorld{
   private _wormholeBallIndicator:WormholeBallIndicator;
   private _bodies:PhysicalBody[] = [];
   private _inputManager:InputManager;
+  private _stateManager:GameStateManager;
 
   public static GET_STAGE_SIZE():{ width:number, height:number }{
     return { width:STAGE_WIDTH, height:STAGE_HEIGHT };
@@ -47,6 +51,22 @@ export default class GameWorld{
     return this._app.view;
   }
 
+  public get user():User{
+    return this._user;
+  }
+
+  public get wormholeBall():WormholeBall{
+    return this._wormholeBall;
+  }
+
+  public get wormholeBallIndicator():WormholeBallIndicator{
+    return this._wormholeBallIndicator;
+  }
+
+  public get ground():Ground{
+    return this._ground;
+  }
+
   constructor( { container } ){
     this._initWorld();
     this._initStage( container );
@@ -57,6 +77,9 @@ export default class GameWorld{
     this._initWormholeBallIndicator();
     this._initUser();
     this._initCollisionProccess();
+
+    this._stateManager = GameStateManager.getInstance();
+    this._stateManager.init( this );
   }
 
   private _initWorld():void{
@@ -77,7 +100,9 @@ export default class GameWorld{
   }
 
   private _initInputManager():void{
-    this._inputManager = new InputManager( { stage:this.stage, rectangle:{ x:0, y:0, width:STAGE_WIDTH, height:STAGE_HEIGHT } } );
+    // this._inputManager = new InputManager( { stage:this.stage, rectangle:{ x:0, y:0, width:STAGE_WIDTH, height:STAGE_HEIGHT } } );
+    this._inputManager = InputManager.getIntance();
+    this._inputManager.init( { stage:this.stage, rectangle:{ x:0, y:0, width:STAGE_WIDTH, height:STAGE_HEIGHT } } );
   } 
 
   private _initGround():void{
@@ -104,9 +129,6 @@ export default class GameWorld{
   private _initWormholeBallIndicator():void{
     this._wormholeBallIndicator = new WormholeBallIndicator( this._wormholeBall, { x:0, y:0, width:STAGE_WIDTH, height:STAGE_HEIGHT-this._ground.height } );
     this.stage.addChild( this._wormholeBallIndicator ); 
-    this._wormholeBallIndicator.x = 100;
-    this._wormholeBallIndicator.x = 100;
-    this._wormholeBallIndicator.visible = true;
   }
 
   private _initMountain():void{
@@ -127,24 +149,21 @@ export default class GameWorld{
   }
 
   private _update( delta:number ):void{ 
-    this._proccessInput();
+    this._stateManager.update();
     this._proccessUpdate();
-    this._proccessGameStatus();
+    // this._proccessGameStatus();
+    // if( GameStatus.IS_SHOOTING && this._wormholeBall.y > STAGE_HEIGHT-this._ground.height- this._wormholeBall.height){
+    //   GameStatus.IS_SHOOTING = false;
+    //   GameStatus.AVAILABLE_DRAG = true;
+    //   this._wormholeBall.x = this._user.x;
+    //   this._wormholeBall.y = this._user.y - 10;
+    // }
   }
   
-  private _proccessInput():void{
-    if( GameStatus.AVAILABLE_FIRE ){
-      this._user.setVector( this._inputManager.vector );
-      this._user.showArrow();
-    }else{
-      this._user.hideArrow();
-    }
-  }
-
   private _proccessGameStatus():void{
     if( GameStatus.IS_FIRE && !GameStatus.IS_SHOOTING ){
       this._wormholeBall.x = this._user.x;
-      this._wormholeBall.y = this._user.y;
+      this._wormholeBall.y = this._user.y - 10;
       this._wormholeBall.setVector( this._inputManager.vector );
       this._wormholeBall.show();
       GameStatus.IS_SHOOTING = true;
@@ -160,7 +179,6 @@ export default class GameWorld{
     for( let i=0, count=this._bodies.length ; i<count ; i+=1 ){
       this._bodies[ i ].update();
     }
-    this._wormholeBallIndicator.update();
   }
 
   private _initCollisionProccess():void{
@@ -170,11 +188,16 @@ export default class GameWorld{
       if( event.pairs.length ){
         const pair:any = event.pairs[ 0 ];
         const bodyA:Body = pair.bodyA;
-        const proccessA:Function = proccessMap[ bodyA.label ]
         const bodyB:Body = pair.bodyB;
-        const proccessB:Function = proccessMap[ bodyB.label ]
-        if( proccessA ){ proccessA( pair.bodyB, event  );  }
-        if( proccessB ){ proccessB( pair.bodyA, event  );  }
+        bodyA.isCollision = true;
+        bodyB.isCollision = true;
+        bodyA.collisionTarget = bodyB;
+        bodyB.collisionTarget = bodyA;
+        // const proccessA:Function = proccessMap[ bodyA.label ]
+        
+        // const proccessB:Function = proccessMap[ bodyB.label ]
+        // if( proccessA ){ proccessA( pair.bodyB, event  );  }
+        // if( proccessB ){ proccessB( pair.bodyA, event  );  }
       }
     }); 
   }
@@ -182,11 +205,10 @@ export default class GameWorld{
   private _callisionProccessMap():any{
     return {
       [this._wormholeBall.label]:( target:Body, event )=>{
-        console.log( target.label );
         if( target.label === 'mountain' || target.label === 'ground' ){
           this._wormholeBall.deactive();
           this._user.x = this._wormholeBall.x;
-          this._user.y = this._wormholeBall.y-20;
+          this._user.y = this._wormholeBall.y-10;
         }
         GameStatus.IS_SHOOTING = false;
         GameStatus.AVAILABLE_DRAG = true;

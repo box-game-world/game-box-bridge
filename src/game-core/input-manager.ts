@@ -1,32 +1,41 @@
 import * as PIXI from 'pixi.js'
-import { Rectangle, Vertex, Vector } from './interfaces'
+import { Rectangle, Vertex, Vector, Position } from './interfaces'
 import GameStatus from './game-status';
 import GameConfig from './game-config'
 
-
+const CREATION_SYMBOL = Symbol();
 export default class InputManager{
 
+  private static _instance:InputManager;
   private _isTouched:boolean = false;
-  private _touchStartPosition:Vertex = { x:0, y:0 };
-  private _touchMovePosition:Vertex = { x:0, y:0 };
-  private _touchEndPosition:Vertex = { x:0, y:0 };
+  private _touchStartPosition:Position = { x:0, y:0 };
+  private _touchMovePosition:Position = { x:0, y:0 };
+  private _touchEndPosition:Position = { x:0, y:0 };
   private _angle:number = 0;
   private _vector:Vector = { radian:0, length:0 };
   private _availableVector:boolean;
+  private _initialized:boolean = false;
+
+  public static getIntance():InputManager{
+    if( !InputManager._instance ){
+      InputManager._instance = new InputManager( CREATION_SYMBOL );
+    }
+    return InputManager._instance;
+  }
 
   public get isTouched():boolean{
     return this._isTouched;
   }
 
-  public get touchStartPosition():Vertex{
+  public get touchStartPosition():Position{
     return this._touchStartPosition;
   }
 
-  public get touchMovePosition():Vertex{
+  public get touchMovePosition():Position{
     return this._touchMovePosition;
   }
 
-  public get touchEndPosition():Vertex{
+  public get touchEndPosition():Position{
     return this._touchEndPosition;
   }
 
@@ -38,7 +47,14 @@ export default class InputManager{
     return this._availableVector;
   }
 
-  constructor( data:{stage:PIXI.Container, rectangle:Rectangle }  ){
+  constructor( symbol:Symbol ){
+    if( symbol !== CREATION_SYMBOL ){
+      throw new Error( 'getInstance 클래스 메소드를 이용해 객체를 생성해주세요.' );
+    }
+  }
+
+  public init( data:{ stage:PIXI.Container, rectangle:Rectangle }):void{
+    if( this._initialized ){ return; }
     const area:PIXI.Graphics = new PIXI.Graphics();
     const stage:PIXI.Container = data.stage;
     const rectangle:Rectangle = data.rectangle;
@@ -51,26 +67,19 @@ export default class InputManager{
 
     stage.interactive = true;
     stage.on( 'touchstart', ( event:PIXI.interaction.InteractionEvent )=>{
-      if( !GameStatus.AVAILABLE_DRAG ){ return; }
-      this._touchStartPosition = event.data.global.clone();
+      this._touchStartPosition = this._touchMovePosition = event.data.global.clone();
+      this._isTouched = true;
     });
 
     stage.on( 'touchmove', ( event:PIXI.interaction.InteractionEvent )=>{
       this._touchMovePosition = event.data.global;
-      const xLength:number = this.touchMovePosition.x - this._touchStartPosition.x;
-      const yLength:number = this.touchMovePosition.y - this._touchStartPosition.y;
-      const distance:number = ( Math.abs( xLength ) + Math.abs( yLength ) ) * 0.4;
-      this._vector.radian = Math.atan2( yLength, xLength );
-      this._vector.length = Math.max( distance, GameConfig.MIN_SHOOTING_POWER );
-      GameStatus.AVAILABLE_FIRE = distance > GameConfig.MIN_SHOOTING_POWER;
     });
 
     stage.on( 'touchend', ( event:PIXI.interaction.InteractionEvent )=>{
-      if( GameStatus.AVAILABLE_FIRE ){
-        GameStatus.IS_FIRE = true;
-        GameStatus.AVAILABLE_DRAG = false;
-      }
-    })
+      this._touchEndPosition = event.data.global.clone();
+      this._isTouched = false;
+    });
 
+    this._initialized = true;
   }
 }

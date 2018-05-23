@@ -77,6 +77,14 @@ export default class PhysicalBody{
     return this._isInitialize;
   }
 
+  public get isCollision():boolean{
+    return this._body.isCollision;
+  }
+
+  public get collisionTarget():Body{
+    return this._body.collisionTarget;
+  }
+
   constructor( world:World, config?:{ vertices?:Vertex[], bodyOptions?:any, options?:any } ){
     this._world = world;
     if( config ){
@@ -116,6 +124,11 @@ export default class PhysicalBody{
 
   public hide():void{
     this._sprite.visible = false;
+  }
+
+  public resetCollision():void{
+    this._body.isCollision = false;
+    this._body.collisionTarget = null;
   }
 
   protected _preInitialze():void{

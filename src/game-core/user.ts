@@ -3,11 +3,22 @@ import { Vertex, Vector } from './interfaces'
 import PhysicalBody from './physical-body'
 import { World, Events, Body } from 'matter-js'
 import { Container } from 'pixi.js';
+import GameConfig from './game-config';
 
 export default class User extends PhysicalBody{
 
   private _vector:Vector;
   private _arrow:VectorArrow;
+
+  public get vector():Vector{
+    return this._vector;
+  }
+
+  public set vector( value:Vector ){
+    this._vector = value;
+    value.length > GameConfig.MIN_SHOOTING_POWER ? this.showArrow() : this.hideArrow();
+    this._arrow.setVector( value );
+  }
 
   constructor( world:World ){
     super( world );
@@ -17,10 +28,7 @@ export default class User extends PhysicalBody{
     this._body.label = 'user';
     this._arrow = new VectorArrow();
     this.sprite.addChild( this._arrow );
-
-    Events.on( this._body, 'sleepStart', ()=>{
-      this.deactive();
-    });
+    this.hideArrow();
   }
 
   protected _generatorVertices():Vertex[]{
@@ -40,6 +48,7 @@ export default class User extends PhysicalBody{
 
   public setVector( vector:Vector ):void{
     this._vector = vector;
+    vector.length > GameConfig.MIN_SHOOTING_POWER ? this.showArrow() : this.hideArrow();
     this._arrow.setVector( vector );
   }
 

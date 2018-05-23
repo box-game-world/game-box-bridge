@@ -54,6 +54,11 @@ export default class WormholeBallIndicator extends Sprite{
       outTop = true;
     }
 
+    if( y > this._rectangle.height  ){
+      this.visible = false;
+      return;
+    }
+
     this.visible = outLeft || outRight || outTop;
     if( this.visible ){
       let angle = 0;
