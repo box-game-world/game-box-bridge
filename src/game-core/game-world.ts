@@ -182,7 +182,8 @@ export default class GameWorld{
   private _callisionProccessMap():any{
     return {
       [this._wormholeBall.label]:( target:Body, event )=>{
-        if( target.label === 'mountain' ){
+        console.log( target.label );
+        if( target.label === 'mountain' || target.label === 'ground' ){
           this._wormholeBall.deactive();
           this._user.x = this._wormholeBall.x;
           this._user.y = this._wormholeBall.y-20;
