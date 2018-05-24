@@ -17,7 +17,7 @@ export default class User extends PhysicalBody{
   public set vector( value:Vector ){
     this._vector = value;
     value.length > GameConfig.MIN_SHOOTING_POWER ? this.showArrow() : this.hideArrow();
-    this._arrow.setVector( value );
+    this._arrow.setVector( { radian:value.radian-this._body.angle, length:value.length}  );
   }
 
   constructor( world:World ){
@@ -26,13 +26,15 @@ export default class User extends PhysicalBody{
 
   protected _initialzed():void{
     this._body.label = 'user';
+    this._body.sleepThreshold = 20;
     this._arrow = new VectorArrow();
     this.sprite.addChild( this._arrow );
     this.hideArrow();
+    Events.on( this._body, 'sleepStart', ()=>{ /*console.log( 'sleep start');*/ });
   }
 
   protected _generatorVertices():Vertex[]{
-    const width:number = 10;
+    const width:number = 12;
     const height:number = 10;
     return [
       { x:0, y:0 },
@@ -44,12 +46,6 @@ export default class User extends PhysicalBody{
 
   protected _update():void{
     super._update();
-  }
-
-  public setVector( vector:Vector ):void{
-    this._vector = vector;
-    vector.length > GameConfig.MIN_SHOOTING_POWER ? this.showArrow() : this.hideArrow();
-    this._arrow.setVector( vector );
   }
 
   public showArrow():void{

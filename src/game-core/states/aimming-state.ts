@@ -12,8 +12,8 @@ export default class AimmingState extends State{
   private _user:User;
   private _wormholeBall:WormholeBall;
 
-  constructor( gameWorld:GameWorld, changeCallback:Function ){
-    super( gameWorld, changeCallback );
+  constructor( gameWorld:GameWorld, changeStateCallback:Function ){
+    super( gameWorld, changeStateCallback );
     this._user = this.gameWorld.user;
     this._wormholeBall = this.gameWorld.wormholeBall;
   }
@@ -29,14 +29,14 @@ export default class AimmingState extends State{
 
     if( !this._inputManager.isTouched ){
       if( distance < GameConfig.MIN_SHOOTING_POWER ){
-        this.changeCallback( StateEnum.Ready );
+        this.changeState( StateEnum.Ready );
       }else{
         this._wormholeBall.x = this._user.x;
         this._wormholeBall.y = this._user.y;
         this._wormholeBall.resetCollision();
         this._wormholeBall.show();
         this._wormholeBall.setVector( this._user.vector );
-        this.changeCallback( StateEnum.Fired );
+        this.changeState( StateEnum.Fired );
       }
     }
   }

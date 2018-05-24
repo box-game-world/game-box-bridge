@@ -5,6 +5,8 @@ import { stat } from "fs";
 import { StateEnum } from "./interfaces";
 import AimmingState from "./states/aimming-state";
 import FiredState from "./states/fired-state";
+import WaitingUserSleepState from "./states/waiting-user-sleep-state";
+import CreateNextState from "./states/create-next";
 
 const CREATION_SYMBOL = Symbol();
 
@@ -14,6 +16,8 @@ export default class GameStateManager{
   private _readyState:ReadyState;
   private _aimmingState:AimmingState;
   private _firedState:FiredState;
+  private _waitingUserSleepState:WaitingUserSleepState;
+  private _createNextState:CreateNextState;
 
   private _gameWorld:GameWorld;
   private _initialized:boolean = false
@@ -42,26 +46,31 @@ export default class GameStateManager{
   }
 
   private _initStates():void{
-    const setStateCallback:Function = this._setState.bind( this )
+    const setStateCallback:Function = this._setState.bind( this );
     this._readyState = new ReadyState( this._gameWorld, setStateCallback );
     this._aimmingState = new AimmingState( this._gameWorld, setStateCallback );
     this._firedState = new FiredState( this._gameWorld, setStateCallback );
+    this._waitingUserSleepState = new WaitingUserSleepState( this._gameWorld, setStateCallback );
+    this._createNextState = new CreateNextState( this._gameWorld, setStateCallback );
     this._currentState = this._readyState;
   }
 
-  private _setState( state:StateEnum ):void{
-    switch( state ){
-      case StateEnum.Ready: 
-        this._currentState = this._readyState;
-        break;
+  private _setState( stateType:StateEnum ):void{
+    let state:State|null = null;
+    switch( stateType ){
+      case StateEnum.Ready:  state = this._readyState; break;
+      case StateEnum.Aimming:  state = this._aimmingState; break;
+      case StateEnum.Fired:  state = this._firedState; break;
+      case StateEnum.WaitingUserSleep:  state = this._waitingUserSleepState; break;
+      case StateEnum.CreateNext:  state = this._createNextState; break;
+    }
 
-      case StateEnum.Aimming: 
-        this._currentState = this._aimmingState;
-        break;
-
-      case StateEnum.Fired: 
-        this._currentState = this._firedState;
-        break;
+    if( state ){
+      if( this._currentState ){
+        this._currentState.destroyed();
+      }
+      this._currentState = state;
+      this._currentState.mounted();
     }
   }
 }

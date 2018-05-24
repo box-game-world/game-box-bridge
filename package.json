@@ -12,10 +12,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@types/gsap": "^1.19.2",
     "@types/node": "^10.0.0",
     "@types/npm": "^2.0.29",
     "@types/pixi.js": "^4.7.3",
     "bootstrap-vue": "^2.0.0-rc.9",
+    "gsap": "^2.0.0",
     "matter-js": "^0.14.1",
     "poly-decomp": "^0.2.1",
     "sass-loader": "^7.0.1",

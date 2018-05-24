@@ -25,5 +25,7 @@ export interface Vector{
 export enum StateEnum{
   Ready,
   Aimming,
-  Fired
+  Fired,
+  WaitingUserSleep,
+  CreateNext,
 }

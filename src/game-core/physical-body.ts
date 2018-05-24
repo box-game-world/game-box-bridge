@@ -113,7 +113,7 @@ export default class PhysicalBody{
   }
 
   public active():void{
-    this._body.isSensor = false;
+    this._body.isSensor = this._body.isSleeping = false; 
     Body.setStatic( this._body, false );
     Body.applyForce( this._body, { x:this.x, y:this.y }, { x:0, y:0.0000001} );
   }
@@ -186,6 +186,14 @@ export default class PhysicalBody{
   protected _updatedAfter():void{
   }
 
+  protected _createBody():void{
+    this._body = Bodies.fromVertices( 
+      0, 0, 
+      ( this._vertices ) ? this._vertices : this._generatorVertices(), 
+      ( this._bodyOptions && this._bodyOptions ) ? this._bodyOptions : null );
+    World.add( this._world, this.body );
+  }
+
   private _createSprite():void{
     this._sprite = new PIXI.Sprite();
     this._sprite.addChild( this._graphics );
@@ -194,13 +202,5 @@ export default class PhysicalBody{
 
   private _createGraphics():void{
     this._graphics = new PIXI.Graphics();
-  }
-
-  private _createBody():void{
-    this._body = Bodies.fromVertices( 
-      0, 0, 
-      ( this._vertices ) ? this._vertices : this._generatorVertices(), 
-      ( this._bodyOptions && this._bodyOptions ) ? this._bodyOptions : null );
-    World.add( this._world, this.body );
   }
 }
