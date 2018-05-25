@@ -53,6 +53,7 @@ export default class GameStateManager{
     this._waitingUserSleepState = new WaitingUserSleepState( this._gameWorld, setStateCallback );
     this._createNextState = new CreateNextState( this._gameWorld, setStateCallback );
     this._currentState = this._readyState;
+    this._currentState.mounted();
   }
 
   private _setState( stateType:StateEnum ):void{

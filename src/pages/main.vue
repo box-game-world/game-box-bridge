@@ -4,8 +4,7 @@
   <div class="card h-100 main-wrapper">
     <div class="card-header game-title">
       <h1 class="text-center pt-5 pb-5 m-0"> 
-          W O R M<br>
-          H O L E
+          WORMHOLE
         </h1>    
     </div>
     <div class="card-block h-100 text-center pt-5">
@@ -43,7 +42,7 @@ export default class Main extends Vue{
 }
 
 .game-title > h1{
-  font-size: 4em; 
+  font-size: 2em; 
 }
 
 .btn-go{

@@ -2,7 +2,7 @@
 
 
 import * as PIXI from 'pixi.js'
-import { Bodies, Body, World } from 'matter-js'
+import { Bodies, Body, World, Sleeping } from 'matter-js'
 import { Vertex } from './interfaces'
 
 export default class PhysicalBody{
@@ -102,7 +102,7 @@ export default class PhysicalBody{
   }
 
   public update():void{
-    this._updatedBefore();
+    this._updatedBefore(); 
     this._update();
     this._updatedAfter();
   }
@@ -110,12 +110,22 @@ export default class PhysicalBody{
   public deactive():void{
     Body.setStatic( this._body, true );
     this._body.isSensor = true;
+    console.log( `------- deactive : ${this._body.label} `, this._body );
   }
 
   public active():void{
-    this._body.isSensor = this._body.isSleeping = false; 
+    this._body.isSensor = false; 
+    
+    console.log( this._body.position.x, this._body.position.y )
+    // this._body.isSleeping = false; 
+    // Sleeping.set( this._body, false ); 
     Body.setStatic( this._body, false );
-    Body.applyForce( this._body, { x:this.x, y:this.y }, { x:0, y:0.0000001} );
+    
+    console.log( '----------------')
+    console.log( this._body.position.x, this._body.position.y )
+    
+    // Body.applyForce( this._body, { x:this.x, y:this.y }, { x:0, y:0.0000001} );
+    console.log( `------- active : ${this._body.label} `, this._body.position.x );
   }
 
   public show():void{
@@ -152,7 +162,7 @@ export default class PhysicalBody{
   
   protected _drawPathBefore( vertices:Vertex[] ):void{
     this._graphics.clear(); 
-    // this._graphics.beginFill(0xffffff);
+    this._graphics.beginFill(0xffffff);
     this._graphics.lineStyle( 1,0xdedede, 1 );
     // this._graphics.lineStyle( 1,0, 1 );
   }

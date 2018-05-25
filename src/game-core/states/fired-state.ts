@@ -29,12 +29,25 @@ export default class FiredState extends State{
     this._stepManager = StepManager.getInstance();
   }
 
+  public mounted():void{
+    console.log( '::: Fired state :::' );
+    this._user.deactive();
+    this._ball.active();
+    this._ball.show();
+    this._ball.x = this._user.x;
+    this._ball.y = this._user.y;
+    this._ball.resetCollision();
+    this._ball.setVector( this._user.vector );
+    console.log( 'Ball : ', this._ball );
+    console.log( 'User : ', this._user );
+  }
+
   public update():void{
     this._indicator.update();
-    
     if( this._ball.isCollision ){
       const targetLabel:string = this._ball.collisionTarget.label;
       if( targetLabel === 'step' ) {
+        console.log( '::: Fired state - collision to step :::' );
         this._moveUser();
         this.changeState( StateEnum.WaitingUserSleep );
         return;
@@ -45,11 +58,7 @@ export default class FiredState extends State{
     }
 
     if( this._ball.y >  this._limitY ){
-      this._ball.deactive();
-      this._ball.hide();
-      this._ball.x = this._user.x;
-      this._ball.y = this._user.y;
-      this._user.vector = { radian:0, length:0 };
+      console.log( '::: Fired state - out  :::' );
       this.changeState( StateEnum.Ready );
     }
   }
@@ -57,9 +66,10 @@ export default class FiredState extends State{
   private _moveUser():void{
     this._ball.deactive();
     this._ball.hide();
-    this._user.active();
     this._user.vector = { radian:0, length:0 };
     this._user.x = this._ball.x;
     this._user.y = this._ball.y - 10;
+    this._user.active();
+    console.log( this._user.x, this._user.y );
   }
 }
