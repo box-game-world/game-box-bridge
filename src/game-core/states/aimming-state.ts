@@ -19,9 +19,12 @@ export default class AimmingState extends State{
   }
 
   public mounted():void{
-    console.log( '::: Aimming state :::' );
-    console.log( 'Ball : ', this._ball );
-    console.log( 'User : ', this._user );
+    // console.log( '::: Aimming state :::' );
+    // console.log( 'Ball : ', this._ball );
+    // console.log( 'User : ', this._user );
+    this._ball.x = this._user.x;
+    this._ball.y = this._user.y;
+    this._ball.resetCollision();
   }
 
   public update():void{

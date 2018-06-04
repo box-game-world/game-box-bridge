@@ -31,11 +31,12 @@ export default class User extends PhysicalBody{
     this.sprite.addChild( this._arrow );
     this.hideArrow();
     Events.on( this._body, 'sleepStart', ()=>{ /*console.log( 'sleep start');*/ });
+    console.log( this );
   }
 
   protected _generatorVertices():Vertex[]{
-    const width:number = 12;
-    const height:number = 10;
+    const width:number = 17;
+    const height:number = 15;
     return [
       { x:0, y:0 },
       { x:width, y:0 },
@@ -77,11 +78,11 @@ class VectorArrow extends PIXI.Container{
     this._lineContainer.addChild( this._lineGraphics );
     this._headContainer.addChild( this._headGraphics );
 
-    this._lineGraphics.lineStyle( 1, 0xffcccc, 1 );
+    this._lineGraphics.lineStyle( 1, 0 );
     this._lineGraphics.moveTo( 0, 0 );
     this._lineGraphics.lineTo( 1, 0 );
 
-    this._headGraphics.lineStyle( 1, 0xffcccc, 1 );
+    this._headGraphics.lineStyle( 1, 0 );
     this._headGraphics.moveTo( -5, -5 );
     this._headGraphics.lineTo( 0, 0 );
     this._headGraphics.lineTo( -5, 5 );

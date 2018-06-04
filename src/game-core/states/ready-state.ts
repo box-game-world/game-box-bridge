@@ -20,13 +20,13 @@ export default class ReadyState extends State{
   }
 
   public mounted():void{
-    console.log( '::: Ready state :::' );
-    console.log( 'Ball : ', this._ball );
-    console.log( 'User : ', this._user );
-    this._ball.deactive();
+    // console.log( '::: Ready state :::' );
+    // console.log( 'Ball : ', this._ball );
+    // console.log( 'User : ', this._user );
+
+    this._ball.x = 0;
+    this._ball.y = 0;
     this._ball.hide();
-    this._ball.x = this._user.x;
-    this._ball.y = this._user.y;
     this._user.vector = { radian:0, length:0 };
   }
 

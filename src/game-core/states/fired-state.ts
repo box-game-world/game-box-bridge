@@ -9,6 +9,8 @@ import WormholeBallIndicator from "../wormhole-ball-indicator";
 import WormholeBall from "../wormhole-ball";
 import Ground from "../ground";
 import StepManager from "../step-manager";
+import { find } from 'lodash';
+import PhysicalBody from "../physical-body";
 
 export default class FiredState extends State{
 
@@ -30,30 +32,27 @@ export default class FiredState extends State{
   }
 
   public mounted():void{
-    console.log( '::: Fired state :::' );
-    this._user.deactive();
-    this._ball.active();
+    
     this._ball.show();
-    this._ball.x = this._user.x;
-    this._ball.y = this._user.y;
-    this._ball.resetCollision();
     this._ball.setVector( this._user.vector );
-    console.log( 'Ball : ', this._ball );
-    console.log( 'User : ', this._user );
+    console.log( 'Vector : ', this._user.vector );
+    // console.log( '::: Fired state :::' );
+    // console.log( 'Ball : ', this._ball );
+    // console.log( 'User : ', this._user );
   }
 
   public update():void{
     this._indicator.update();
     if( this._ball.isCollision ){
-      const targetLabel:string = this._ball.collisionTarget.label;
-      if( targetLabel === 'step' ) {
+      const targetQueue:PhysicalBody[] = this._ball.collisionQueue;
+      if( this._findCollisionTarget( targetQueue, 'step') ){
         console.log( '::: Fired state - collision to step :::' );
         this._moveUser();
         this.changeState( StateEnum.WaitingUserSleep );
         return;
-      }else if( targetLabel === 'ground' ){
-        this._moveUser();
-        return;
+      }else if( this._findCollisionTarget( targetQueue, 'ground') ){
+          this._moveUser();
+          return;
       }
     }
 
@@ -63,13 +62,15 @@ export default class FiredState extends State{
     }
   }
 
+  private _findCollisionTarget( queue:PhysicalBody[], label:string ):PhysicalBody{
+    return find( queue, (item):boolean=>item && item.label && item.label === label);
+  }
+
   private _moveUser():void{
-    this._ball.deactive();
     this._ball.hide();
     this._user.vector = { radian:0, length:0 };
     this._user.x = this._ball.x;
-    this._user.y = this._ball.y - 10;
-    this._user.active();
-    console.log( this._user.x, this._user.y );
+    this._user.y = this._ball.y - 20;
+    this._user.wakeup();
   }
 }

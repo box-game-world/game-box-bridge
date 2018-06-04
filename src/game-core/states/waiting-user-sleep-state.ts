@@ -4,6 +4,8 @@ import { StateEnum } from "../interfaces";
 import User from "../user";
 import StepManager from "../step-manager";
 import WormholeBall from "../wormhole-ball";
+import PhysicalBody from "../physical-body";
+import { find } from 'lodash';
 
 
 export default class WaitingUserSleepState extends State{
@@ -27,11 +29,15 @@ export default class WaitingUserSleepState extends State{
   }
 
   public update():void{
-    if( this._user.isCollision && this._user.collisionTarget.label === 'ground' ){
+    const collisionQueue:PhysicalBody[] = this._user.collisionQueue;
+    if( this._user.isCollision && this._findCollisionTarget( collisionQueue, 'ground') ){
       console.log( 'game over' );
     }else{
       if( this._user.body.isSleeping && !this._waitingAni){
-        if( this._user.collisionTarget === this._stepManager.nextStep.body ){
+        //map으로 변경
+        console.log( this._findCollisionTarget( collisionQueue, 'step') === this._stepManager.nextStep.body )
+        console.log( this._findCollisionTarget( collisionQueue, 'step'), this._stepManager.nextStep.body )
+        if( this._findCollisionTarget( collisionQueue, 'step') === this._stepManager.nextStep.body ){
           this._waitingAni = true;
           this._stepManager.next().then( ()=>{
             this.changeState( StateEnum.Ready );
@@ -43,4 +49,9 @@ export default class WaitingUserSleepState extends State{
       }
     }
   }
+
+  private _findCollisionTarget( queue:PhysicalBody[], label:string ):PhysicalBody{
+    return find( queue, (item):boolean=>item && item.label && item.label === label);
+  }
 }
+

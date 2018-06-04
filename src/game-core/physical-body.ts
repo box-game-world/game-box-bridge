@@ -16,6 +16,7 @@ export default class PhysicalBody{
   protected _graphics:PIXI.Graphics;
   protected _body:Body;
   protected _isInitialize:boolean = false;
+  protected _addedToWorld:boolean = false;
 
   public get label():string{
     return this._body.label;
@@ -81,8 +82,8 @@ export default class PhysicalBody{
     return this._body.isCollision;
   }
 
-  public get collisionTarget():Body{
-    return this._body.collisionTarget;
+  public get collisionQueue():Body{
+    return this._body.collisionQueue;
   }
 
   constructor( world:World, config?:{ vertices?:Vertex[], bodyOptions?:any, options?:any } ){
@@ -99,6 +100,7 @@ export default class PhysicalBody{
     this._render();
     this._isInitialize = true;
     this._initialzed();
+    this.resetCollision();
   }
 
   public update():void{
@@ -107,38 +109,37 @@ export default class PhysicalBody{
     this._updatedAfter();
   }
 
-  public deactive():void{
-    Body.setStatic( this._body, true );
-    this._body.isSensor = true;
-    console.log( `------- deactive : ${this._body.label} `, this._body );
-  }
-
-  public active():void{
-    this._body.isSensor = false; 
-    
-    console.log( this._body.position.x, this._body.position.y )
-    // this._body.isSleeping = false; 
-    // Sleeping.set( this._body, false ); 
-    Body.setStatic( this._body, false );
-    
-    console.log( '----------------')
-    console.log( this._body.position.x, this._body.position.y )
-    
-    // Body.applyForce( this._body, { x:this.x, y:this.y }, { x:0, y:0.0000001} );
-    console.log( `------- active : ${this._body.label} `, this._body.position.x );
-  }
-
   public show():void{
     this._sprite.visible = true;
+    this.addToWorld();
   }
 
   public hide():void{
-    this._sprite.visible = false;
+    // this._sprite.visible = false;
+    this.removeToWorld();
+  }
+
+  public addToWorld():void{
+    this._addedToWorld = true;
+    World.add( this._world, this.body );
+  }
+
+  public removeToWorld():void{
+    this._addedToWorld = false;
+    World.remove( this._world, this.body );
+  }
+
+  public wakeup():void{
+    Body.set( this._body, { isSleeping:false} );
+  }
+
+  public sleep():void{
+    Body.set( this._body, { isSleeping:true} );
   }
 
   public resetCollision():void{
     this._body.isCollision = false;
-    this._body.collisionTarget = null;
+    this._body.collisionQueue = [];
   }
 
   protected _preInitialze():void{
@@ -163,8 +164,8 @@ export default class PhysicalBody{
   protected _drawPathBefore( vertices:Vertex[] ):void{
     this._graphics.clear(); 
     this._graphics.beginFill(0xffffff);
-    this._graphics.lineStyle( 1,0xdedede, 1 );
-    // this._graphics.lineStyle( 1,0, 1 );
+    // this._graphics.lineStyle( 1,0xdedede, 1 );
+    this._graphics.lineStyle( 1,0 );
   }
 
   protected _drawPath( vertices:Vertex[] ):void{
@@ -201,7 +202,7 @@ export default class PhysicalBody{
       0, 0, 
       ( this._vertices ) ? this._vertices : this._generatorVertices(), 
       ( this._bodyOptions && this._bodyOptions ) ? this._bodyOptions : null );
-    World.add( this._world, this.body );
+    this.addToWorld();
   }
 
   private _createSprite():void{

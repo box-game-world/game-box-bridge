@@ -24,7 +24,8 @@ export default class WormholeBallIndicator extends Sprite{
 
   private _render():void{
     this._graphics = new Graphics();
-    this._graphics.beginFill( 0xff9900 );
+    this._graphics.beginFill( 0xffffff );
+    this._graphics.lineStyle( 1, 0 );
     this._graphics.moveTo( 0, 0 );
     this._graphics.lineTo( this._size, 0 );
     this._graphics.lineTo( this._size, this._size );

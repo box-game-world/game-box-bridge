@@ -1,11 +1,10 @@
 import * as PIXI from 'pixi.js'
 import { Rectangle, Vertex, Vector, Position } from './interfaces'
-import GameStatus from './game-status';
 import GameConfig from './game-config'
 
 const CREATION_SYMBOL = Symbol();
 export default class InputManager{
-
+ 
   private static _instance:InputManager;
   private _isTouched:boolean = false;
   private _touchStartPosition:Position = { x:0, y:0 };

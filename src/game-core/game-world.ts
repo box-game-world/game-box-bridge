@@ -7,7 +7,6 @@ import { Engine, World, Bodies, Events, Body } from 'matter-js'
 import PhysicalBody from './physical-body';
 import InputManager from './input-manager';
 import WormholeBall from './wormhole-ball';
-import GameStatus from './game-status';
 import Ground from './ground';
 import GameConfig from './game-config';
 import WormholeBallIndicator from './wormhole-ball-indicator';
@@ -15,6 +14,7 @@ import State from './states/abs-state';
 import ReadyState from './states/ready-state';
 import GameStateManager from './game-state-manager';
 import StepManager from './step-manager';
+import { forEach } from 'lodash';
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 600;
@@ -150,15 +150,14 @@ export default class GameWorld{
 
   private _initCollisionProccess():void{
     Events.on( this._worldEngine, 'collisionStart', ( event )=>{
-      if( event.pairs.length ){
-        const pair:any = event.pairs[ 0 ];
+      forEach( event.pairs, ( pair )=>{
         const bodyA:Body = pair.bodyA;
         const bodyB:Body = pair.bodyB;
         bodyA.isCollision = true;
         bodyB.isCollision = true;
-        bodyA.collisionTarget = bodyB;
-        bodyB.collisionTarget = bodyA;
-      }
+        bodyA.collisionQueue.push(bodyB);
+        bodyB.collisionQueue.push(bodyA);
+      } )
     }); 
   }
 }
