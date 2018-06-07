@@ -9,10 +9,11 @@ export default class WormholeBall extends PhysicalBody{
   private _vector:Vector;
 
   constructor( world:World ){
-    super( world, { bodyOptions:{ isSensor:true, timeScale:0.9 }} );
+    super( world, { bodyOptions:{ isSensor:true }} );
   }
 
   protected _initialzed():void{
+    super._initialzed();
     this._body.label = 'wormhole_ball';
   }
 
@@ -21,9 +22,6 @@ export default class WormholeBall extends PhysicalBody{
   }
 
   public setVector( vector:Vector ):void{
-    if( this._body.isStatic ){ console.warn( `body:${this._body.label} state is static`); }
-    if( this._body.isSleeping ){ console.warn( `body:${this._body.label} state is sleeping`); }
-
     this._vector = vector;
     const targetX:number = Math.cos( vector.radian ) * vector.length / 15000;
     const targetY:number = Math.sin( vector.radian ) * vector.length / 15000;

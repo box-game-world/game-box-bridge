@@ -24,9 +24,10 @@ export default class ReadyState extends State{
     // console.log( 'Ball : ', this._ball );
     // console.log( 'User : ', this._user );
 
-    this._ball.x = 0;
-    this._ball.y = 0;
+    this._ball.x = 100;
+    this._ball.y = 100;
     this._ball.hide();
+    this._ball.setStatic( true );
     this._user.vector = { radian:0, length:0 };
   }
 

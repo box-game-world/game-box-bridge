@@ -34,8 +34,9 @@ export default class FiredState extends State{
   public mounted():void{
     
     this._ball.show();
+    this._ball.wakeup();
+    this._ball.setStatic( false );
     this._ball.setVector( this._user.vector );
-    console.log( 'Vector : ', this._user.vector );
     // console.log( '::: Fired state :::' );
     // console.log( 'Ball : ', this._ball );
     // console.log( 'User : ', this._user );

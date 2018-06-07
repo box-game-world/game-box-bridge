@@ -22,7 +22,7 @@ export default class WaitingUserSleepState extends State{
     this._stepManager = StepManager.getInstance();
   }
 
-  public mounted():void{
+  public mounted():void{ 
     console.log( '::: Waiting user sleep state :::' );
     console.log( 'Ball : ', this._ball );
     console.log( 'User : ', this._user );
@@ -35,8 +35,8 @@ export default class WaitingUserSleepState extends State{
     }else{
       if( this._user.body.isSleeping && !this._waitingAni){
         //map으로 변경
-        console.log( this._findCollisionTarget( collisionQueue, 'step') === this._stepManager.nextStep.body )
-        console.log( this._findCollisionTarget( collisionQueue, 'step'), this._stepManager.nextStep.body )
+        // console.log( this._findCollisionTarget( collisionQueue, 'step') === this._stepManager.nextStep.body )
+        // console.log( this._findCollisionTarget( collisionQueue, 'step'), this._stepManager.nextStep.body )
         if( this._findCollisionTarget( collisionQueue, 'step') === this._stepManager.nextStep.body ){
           this._waitingAni = true;
           this._stepManager.next().then( ()=>{

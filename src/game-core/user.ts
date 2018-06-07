@@ -25,6 +25,7 @@ export default class User extends PhysicalBody{
   }
 
   protected _initialzed():void{
+    super._initialzed();
     this._body.label = 'user';
     this._body.sleepThreshold = 20;
     this._arrow = new VectorArrow();

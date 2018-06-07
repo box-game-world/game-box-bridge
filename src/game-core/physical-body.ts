@@ -18,6 +18,23 @@ export default class PhysicalBody{
   protected _isInitialize:boolean = false;
   protected _addedToWorld:boolean = false;
 
+
+  /*
+  matterjs 내부에서 body 객체의 isStatic 속성을 true로 변경할 때
+  mass, destiny, inertia 속성을 Infinity로 변경한다.
+  
+  이런 과정은 차후 isStatic 속성을 false로 변경할 때 중력을 적용하는 과정에서 ( Engine._bodiesApplyGravity )
+  force 계산 결과가 NaN을 유발할 수 있다.
+  
+  force 속성은 body객체의 포지션을 비롯해 여러 속성을 계산함에 있어 기저가 되기 때문에 오작동을 유발할 가능성이 높다.
+
+  다음과 같이 body객체 생성 후 정상적인 숫자형 데이터를 캐싱해 
+  isStatic이 변경되는 시점에 재할당 해준다.
+  */
+  protected _cacheMass:number;
+  protected _cacheDensity:number;
+  protected _cacheInertia:number;
+
   public get label():string{
     return this._body.label;
   }
@@ -115,7 +132,7 @@ export default class PhysicalBody{
   }
 
   public hide():void{
-    // this._sprite.visible = false;
+    this._sprite.visible = false;
     this.removeToWorld();
   }
 
@@ -125,6 +142,7 @@ export default class PhysicalBody{
   }
 
   public removeToWorld():void{
+    console.log( 'removeToWorld', this );
     this._addedToWorld = false;
     World.remove( this._world, this.body );
   }
@@ -137,6 +155,15 @@ export default class PhysicalBody{
     Body.set( this._body, { isSleeping:true} );
   }
 
+  public setStatic( value:boolean ):void{
+    Body.set( this._body, { 
+      isStatic:value,
+      mass:this._cacheMass,
+      density:this._cacheDensity,
+      inertia:this._cacheInertia,
+    } );
+  }
+
   public resetCollision():void{
     this._body.isCollision = false;
     this._body.collisionQueue = [];
@@ -147,7 +174,9 @@ export default class PhysicalBody{
   }
 
   protected _initialzed():void{
-
+    this._cacheMass = this._body.mass;
+    this._cacheDensity = this._body.density;
+    this._cacheInertia = this._body.inertia;
   }
 
   protected _generatorVertices():Vertex[]{
@@ -164,8 +193,7 @@ export default class PhysicalBody{
   protected _drawPathBefore( vertices:Vertex[] ):void{
     this._graphics.clear(); 
     this._graphics.beginFill(0xffffff);
-    // this._graphics.lineStyle( 1,0xdedede, 1 );
-    this._graphics.lineStyle( 1,0 );
+    this._graphics.lineStyle( 1, 0, 0.1 );
   }
 
   protected _drawPath( vertices:Vertex[] ):void{

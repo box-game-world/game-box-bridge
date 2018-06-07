@@ -19,13 +19,10 @@ export default class Step extends PhysicalBody{
     this._widthRange = [ 70, 100 ];
     this._heightRange = [ 100, 300 ];
     this._diffY = [ -30, 30 ];
-
-    // this._widthRange = [ 100, 100 ];
-    // this._heightRange = [ 300, 300 ];
-    // this._diffY = [ 0, 0 ];
   }
 
   protected _initialzed():void{
+    super._initialzed();
     this._body.label = 'step';
   }
 
@@ -33,7 +30,8 @@ export default class Step extends PhysicalBody{
     const width:number = random( ...this._widthRange );
     const height:number = random( ...this._heightRange ); 
     return [ 
-      { x:0, y: random( ...this._diffY ) },
+      // { x:0, y: random( ...this._diffY ) },
+      { x:0, y: 0 },
       { x:width, y: 0 },
       { x:width, y:height }, 
       { x:0, y:height },
