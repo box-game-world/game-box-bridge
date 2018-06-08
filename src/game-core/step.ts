@@ -30,8 +30,8 @@ export default class Step extends PhysicalBody{
     const width:number = random( ...this._widthRange );
     const height:number = random( ...this._heightRange ); 
     return [ 
-      // { x:0, y: random( ...this._diffY ) },
-      { x:0, y: 0 },
+      { x:0, y: random( ...this._diffY ) },
+      // { x:0, y: 0 },
       { x:width, y: 0 },
       { x:width, y:height }, 
       { x:0, y:height },

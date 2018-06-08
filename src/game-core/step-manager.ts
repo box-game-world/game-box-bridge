@@ -73,13 +73,13 @@ export default class StepManager{
       this._currentStep = this._nextStep;
       this._nextStep = temp;
       this._nextStep.changeVertices();
-      this._nextStep.leftTopX = this._currentStep.leftTopX + this._currentStep.width + random( this._rectangle.width - this._currentStep.width - this._nextStep.width );
-      this._nextStep.leftTopY = this._rectangle.height - this._nextStep.height;
+      this._nextStep.leftTopX = this._currentStep.leftTopX + this._rectangle.width - this._currentStep.width - random( 50 );
+      this._nextStep.leftTopY = this._rectangle.height;
       const diffX:number = -this._currentStep.leftTopX;
       
       TweenLite.to( this._prevStep, this._tweenSpeed, { leftTopX: this._prevStep.leftTopX+diffX } );
       TweenLite.to( this._currentStep, this._tweenSpeed, { leftTopX:  this._currentStep.leftTopX+diffX } );
-      TweenLite.to( this._nextStep, this._tweenSpeed, { leftTopX:  this._nextStep.leftTopX+diffX } );
+      TweenLite.to( this._nextStep, this._tweenSpeed, { leftTopX:  this._nextStep.leftTopX+diffX, leftTopY:this._rectangle.height - this._nextStep.height } );
       TweenLite.to( this._user, this._tweenSpeed, { leftTopX:  this._user.leftTopX+diffX, onComplete:res } );
     } );
   }
