@@ -46,14 +46,11 @@ export default class FiredState extends State{
     this._indicator.update();
     if( this._ball.isCollision ){
       const targetQueue:PhysicalBody[] = this._ball.collisionQueue;
-      if( this._findCollisionTarget( targetQueue, 'step') ){
+      if( this._findCollisionTarget( targetQueue, 'step') || this._findCollisionTarget( targetQueue, 'ground') ){
         console.log( '::: Fired state - collision to step :::' );
         this._moveUser();
         this.changeState( StateEnum.WaitingUserSleep );
         return;
-      }else if( this._findCollisionTarget( targetQueue, 'ground') ){
-          this._moveUser();
-          return;
       }
     }
 
