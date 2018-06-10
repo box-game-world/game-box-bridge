@@ -9,7 +9,7 @@ export default class WormholeBall extends PhysicalBody{
   private _vector:Vector;
 
   constructor( world:World ){
-    super( world, { bodyOptions:{ isSensor:true, mass:1500, timeScale:0.9 }} );
+    super( world, { bodyOptions:{ isSensor:true, mass:1500 }} );
   }
 
   protected _initialzed():void{
@@ -27,7 +27,6 @@ export default class WormholeBall extends PhysicalBody{
     const targetY:number = Math.sin( vector.radian ) * vector.length;
     console.log(this.x,this.y,targetX,targetY );
     Body.applyForce( this._body, { x:this.x, y:this.y }, { x:targetX, y:targetY} );
-    // Body.applyForce( this._body, { x:this.x, y:this.y }, { x:0, y:-0.001} );
   }
 
   public getVector():Vector{
