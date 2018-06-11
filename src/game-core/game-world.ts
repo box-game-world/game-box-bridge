@@ -15,6 +15,7 @@ import ReadyState from './states/ready-state';
 import GameStateManager from './game-state-manager';
 import StepManager from './step-manager';
 import { forEach } from 'lodash';
+import gameStore from './store/game-store';
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 600;

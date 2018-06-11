@@ -16,7 +16,6 @@ export default class WaitingUserSleepState extends State{
   private _stepManager:StepManager;
   private _ground:Ground;
   private _waitingAni:boolean;
-  private _isGameOver:boolean;
   
   constructor( gameWorld:GameWorld, changeStateCallback:Function ){
     super( gameWorld, changeStateCallback );
@@ -36,10 +35,8 @@ export default class WaitingUserSleepState extends State{
     const collisionQueue:PhysicalBody[] = this._user.collisionQueue;
     if( this._user.isCollision && this._findCollisionTarget( collisionQueue, this._ground.body.id) ){
       this._user.resetCollision();
-      console.log( 'game over' );
-      this._isGameOver = true;
     }else{
-      if( this._user.body.isSleeping && !this._waitingAni && !this._isGameOver){
+      if( this._user.body.isSleeping && !this._waitingAni ){
       
         //map으로 변경
         if( this._findCollisionTarget( collisionQueue, this._stepManager.nextStep.body.id ) ){  

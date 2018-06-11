@@ -11,6 +11,8 @@ import Ground from "../ground";
 import StepManager from "../step-manager";
 import { find } from 'lodash';
 import PhysicalBody from "../physical-body";
+import gameStore from "../store/game-store";
+
 
 export default class FiredState extends State{
 
@@ -47,7 +49,7 @@ export default class FiredState extends State{
     if( this._ball.isCollision ){
       const targetQueue:PhysicalBody[] = this._ball.collisionQueue;
       if( this._findCollisionTarget( targetQueue, 'step') || this._findCollisionTarget( targetQueue, 'ground') ){
-        console.log( '::: Fired state - collision to step :::' );
+        gameStore.consumeEnergy( 100 );
         this._moveUser();
         this.changeState( StateEnum.WaitingUserSleep );
         return;
@@ -55,7 +57,7 @@ export default class FiredState extends State{
     }
 
     if( this._ball.y >  this._limitY ){
-      console.log( '::: Fired state - out  :::' );
+      gameStore.consumeEnergy( 100 );
       this.changeState( StateEnum.Ready );
     }
   }

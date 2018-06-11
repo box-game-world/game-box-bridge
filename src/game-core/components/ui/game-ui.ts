@@ -1,5 +1,6 @@
 import EnergyBar from "./energy-bar";
-
+import gameStore from '@/game-core/store/game-store'
+import { autorun } from "mobx";
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 60;
@@ -36,6 +37,9 @@ export default class GameUI extends PIXI.Sprite{
 		this._energyBar = new EnergyBar();
 		this.stage.addChild( this._energyBar );
 		this._energyBar.x = 20 ;
-		this._energyBar.y = 20 ;
+    this._energyBar.y = 20 ;
+    
+    autorun( ()=>this._energyBar.setEnergy( gameStore.energy ) );
+    autorun( ()=>this._energyBar.setMaxEnergy( gameStore.maxEnergy ) );
 	}
 }

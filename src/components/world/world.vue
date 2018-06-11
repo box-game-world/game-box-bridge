@@ -12,7 +12,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import * as PIXI from 'pixi.js' 
 import GameWorld from '@/game-core/game-world.ts'
-import GameUI from '../../game-core/ui/game-ui';
+import GameUI from '@/game-core/components/ui/game-ui';
 
 @Component({})
 export default class World extends Vue{

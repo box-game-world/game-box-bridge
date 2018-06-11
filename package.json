@@ -19,6 +19,7 @@
     "bootstrap-vue": "^2.0.0-rc.9",
     "gsap": "^2.0.0",
     "matter-js": "^0.14.1",
+    "mobx": "^5.0.0",
     "poly-decomp": "^0.2.1",
     "sass-loader": "^7.0.1",
     "style-loader": "^0.21.0",
