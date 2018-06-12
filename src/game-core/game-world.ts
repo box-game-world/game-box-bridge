@@ -16,6 +16,7 @@ import GameStateManager from './game-state-manager';
 import StepManager from './step-manager';
 import { forEach } from 'lodash';
 import gameStore from './store/game-store';
+import { TweenLite } from 'gsap';
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 600;
@@ -80,6 +81,7 @@ export default class GameWorld{
 
     this._stateManager = GameStateManager.getInstance();
     this._stateManager.init( this );
+    console.log( this.stage );
   }
 
   private _initWorld():void{
@@ -112,7 +114,7 @@ export default class GameWorld{
   private _initGround():void{
     this._ground = new Ground( this._world );
     this._addBody( this._ground );
-    this._ground.leftTopX = 0;
+    this._ground.leftTopX = -STAGE_WIDTH;
     this._ground.leftTopY = STAGE_HEIGHT - this._ground.height;
   }
 
@@ -136,6 +138,13 @@ export default class GameWorld{
   public _addBody( body:PhysicalBody ):void{
     this._bodies.push( body );
     this.stage.addChild( body.sprite );
+  }
+
+  public translateX( value:number ):Promise<any>{
+    return new Promise( ( res )=>{
+      TweenLite.to( this.stage, 0.5, { x:value, onComplete:()=>res });
+    } )
+    
   }
 
   private _update( delta:number ):void{ 

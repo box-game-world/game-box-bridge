@@ -37,6 +37,7 @@ export default class WaitingUserSleepState extends State{
       //map으로 변경
       if( !this._findCollisionTarget( collisionQueue, this._ground.body.id ) && this._findCollisionTarget( collisionQueue, this._stepManager.nextStep.body.id ) ){  
         this._waitingAni = true;
+        this.gameWorld.translateX( 0 );
         this._stepManager.next().then( ()=>{
           this.changeState( StateEnum.Ready );
           this._waitingAni = false;
@@ -47,6 +48,15 @@ export default class WaitingUserSleepState extends State{
         this.changeState( StateEnum.Ready );
         this._user.resetCollision();
         this._stepManager.currentStep.resetCollision();
+        
+        if( this._stepManager.currentStep.leftTopX > this._user.leftTopX + this._user.width ){
+          console.log( '@@@' );
+          this.gameWorld.translateX( Math.abs(this._user.leftTopX) + 10 );
+        }else if( this._stepManager.nextStep.leftTopX + this._stepManager.nextStep.width  < this._user.leftTopX  ){
+          this.gameWorld.translateX( GameWorld.GET_STAGE_SIZE().width -  (this._user.leftTopX + this._user.width + 10 ) );
+        }else{
+          this.gameWorld.translateX( 0 );
+        }
       }
     }
   }

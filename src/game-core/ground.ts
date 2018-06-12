@@ -16,6 +16,6 @@ export default class Ground extends PhysicalBody{
 
   protected _generatorVertices():Vertex[]{
     const stageSize:{ width:number, height:number } = GameWorld.GET_STAGE_SIZE();
-    return Bodies.rectangle( 0, 0, stageSize.width, 80 ).vertices;
+    return Bodies.rectangle( 0, 0, stageSize.width * 3, 80 ).vertices;
   }
 }
