@@ -9,7 +9,7 @@ import WormholeBallIndicator from "../wormhole-ball-indicator";
 import WormholeBall from "../wormhole-ball";
 import Ground from "../ground";
 import StepManager from "../step-manager";
-import { find } from 'lodash';
+import { find, remove } from 'lodash';
 import PhysicalBody from "../physical-body";
 import gameStore from "../store/game-store";
 
@@ -22,6 +22,7 @@ export default class FiredState extends State{
   private _ground:Ground;
   private _limitY:number;
   private _stepManager:StepManager;
+  private _collisionEnergyCharger:boolean;
 
   constructor( gameWorld:GameWorld, changeStateCallback:Function ){
     super( gameWorld, changeStateCallback );
@@ -34,11 +35,11 @@ export default class FiredState extends State{
   }
 
   public mounted():void{
-    
     this._ball.show();
     this._ball.wakeup();
     this._ball.setStatic( false );
     this._ball.setVector( this._user.vector );
+    this._collisionEnergyCharger = false;
     // console.log( '::: Fired state :::' );
     // console.log( 'Ball : ', this._ball );
     // console.log( 'User : ', this._user );
@@ -48,8 +49,21 @@ export default class FiredState extends State{
     this._indicator.update();
     if( this._ball.isCollision ){
       const targetQueue:PhysicalBody[] = this._ball.collisionQueue;
+      if( !this._collisionEnergyCharger ){
+        this._collisionEnergyCharger = !!this._findCollisionTarget( targetQueue, 'energy_charger');
+        if( this._collisionEnergyCharger ){
+          this._stepManager.energyCharger.hit();
+          gameStore.chargeEnergy( 100 );
+          this._removeCollisionTarget( targetQueue, 'energy_charger' );
+        }
+      }
+
       if( this._findCollisionTarget( targetQueue, 'step') || this._findCollisionTarget( targetQueue, 'ground') ){
-        gameStore.consumeEnergy( 100 );
+        
+        if( !this._collisionEnergyCharger){
+          gameStore.consumeEnergy( 100 );
+        }
+        
         this._moveUser();
         this.changeState( StateEnum.WaitingUserSleep );
         return;
@@ -66,11 +80,15 @@ export default class FiredState extends State{
     return find( queue, (item):boolean=>item && item.label && item.label === label);
   }
 
+  private _removeCollisionTarget( queue:PhysicalBody[], label:string ):void{
+    remove( queue, (item):boolean=>item && item.label && item.label === label);
+  }
+
   private _moveUser():void{
     this._ball.hide();
     this._user.vector = { radian:0, length:0 };
     this._user.x = this._ball.x;
-    this._user.y = this._ball.y - 20;
+    this._user.y = this._ball.y;
     this._user.wakeup();
   }
 }

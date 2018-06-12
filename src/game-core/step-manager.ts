@@ -5,6 +5,7 @@ import { World } from 'matter-js'
 import { random } from 'lodash'
 import User from "./user";
 import {TweenLite} from "gsap/TweenMax";
+import EnergyCharger from "./energy-charger";
 
 const CREATION_SYMBOL = Symbol();
 export default class StepManager{
@@ -19,6 +20,7 @@ export default class StepManager{
   private _user:User;
   private _rectangle:Rectangle;
   private _addBody:Function;
+  private _energyCharger:EnergyCharger;
   private _tweenSpeed:number = 0.7;
 
   public get currentStep():Step{
@@ -27,6 +29,10 @@ export default class StepManager{
 
   public get nextStep():Step{
     return this._nextStep;
+  }
+
+  public get energyCharger():EnergyCharger{
+    return this._energyCharger;
   }
 
   public static getInstance():StepManager{
@@ -64,6 +70,10 @@ export default class StepManager{
 
     this._user.x = this._currentStep.x;
     this._user.y = this._currentStep.leftTopY;
+
+    this._energyCharger = new EnergyCharger( data.world );
+    this._addBody( this._energyCharger );
+    this._energyCharger.show();
   }
 
   public next():Promise<any>{
@@ -75,12 +85,20 @@ export default class StepManager{
       this._nextStep.changeVertices();
       this._nextStep.leftTopX = this._currentStep.leftTopX + this._rectangle.width - this._currentStep.width - random( 50 );
       this._nextStep.leftTopY = this._rectangle.height;
+
       const diffX:number = -this._currentStep.leftTopX;
-      
-      TweenLite.to( this._prevStep, this._tweenSpeed, { leftTopX: this._prevStep.leftTopX+diffX } );
-      TweenLite.to( this._currentStep, this._tweenSpeed, { leftTopX:  this._currentStep.leftTopX+diffX } );
-      TweenLite.to( this._nextStep, this._tweenSpeed, { leftTopX:  this._nextStep.leftTopX+diffX, leftTopY:this._rectangle.height - this._nextStep.height } );
-      TweenLite.to( this._user, this._tweenSpeed, { leftTopX:  this._user.leftTopX+diffX, onComplete:res } );
+      const prevTargetLeftX:number = this._prevStep.leftTopX+diffX;
+      const currentTargetLeftX:number = this._currentStep.leftTopX+diffX;
+      const nextTargetLeftX:number = this._nextStep.leftTopX+diffX;
+      const nextTargetLeftY:number = this._rectangle.height - this._nextStep.height;
+      const userTargetLeftX:number = this._user.leftTopX+diffX;
+
+      TweenLite.to( this._prevStep, this._tweenSpeed, { leftTopX: prevTargetLeftX } );
+      TweenLite.to( this._currentStep, this._tweenSpeed, { leftTopX: currentTargetLeftX } );
+      TweenLite.to( this._nextStep, this._tweenSpeed, { leftTopX: nextTargetLeftX, leftTopY: nextTargetLeftY } );
+      TweenLite.to( this._user, this._tweenSpeed, { leftTopX: userTargetLeftX, onComplete:res } );
+
+      this._energyCharger.move( currentTargetLeftX + this._currentStep.width + random( 100 ), 10 + random( nextTargetLeftY - 10 ) ) ;
     } );
   }
 }

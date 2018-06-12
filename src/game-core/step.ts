@@ -6,7 +6,7 @@ import { random } from 'lodash'
 
 export default class Step extends PhysicalBody{
 
-  private _isFlat:boolean;
+
   private _widthRange:number[];
   private _heightRange:number[];
   private _diffY:number[];

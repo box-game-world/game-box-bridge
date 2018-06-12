@@ -21,7 +21,7 @@ export default class User extends PhysicalBody{
   }
 
   constructor( world:World ){
-    super( world );
+    super( world, { bodyOptions:{ mass:0.5 }} );
   }
 
   protected _initialzed():void{
@@ -31,8 +31,6 @@ export default class User extends PhysicalBody{
     this._arrow = new VectorArrow();
     this.sprite.addChild( this._arrow );
     this.hideArrow();
-    Events.on( this._body, 'sleepStart', ()=>{ /*console.log( 'sleep start');*/ });
-    console.log( this );
   }
 
   protected _generatorVertices():Vertex[]{
