@@ -33,25 +33,20 @@ export default class WaitingUserSleepState extends State{
 
   public update():void{
     const collisionQueue:PhysicalBody[] = this._user.collisionQueue;
-    if( this._user.isCollision && this._findCollisionTarget( collisionQueue, this._ground.body.id) ){
-      this._user.resetCollision();
-    }else{
-      if( this._user.body.isSleeping && !this._waitingAni ){
-      
-        //map으로 변경
-        if( this._findCollisionTarget( collisionQueue, this._stepManager.nextStep.body.id ) ){  
-          this._waitingAni = true;
-          this._stepManager.next().then( ()=>{
-            this.changeState( StateEnum.Ready );
-            this._waitingAni = false;
-            this._user.resetCollision();
-            this._stepManager.nextStep.resetCollision();
-          });
-        }else{
+    if( this._user.body.isSleeping && !this._waitingAni ){ 
+      //map으로 변경
+      if( !this._findCollisionTarget( collisionQueue, this._ground.body.id ) && this._findCollisionTarget( collisionQueue, this._stepManager.nextStep.body.id ) ){  
+        this._waitingAni = true;
+        this._stepManager.next().then( ()=>{
           this.changeState( StateEnum.Ready );
+          this._waitingAni = false;
           this._user.resetCollision();
-          this._stepManager.currentStep.resetCollision();
-        }
+          this._stepManager.nextStep.resetCollision();
+        });
+      }else{
+        this.changeState( StateEnum.Ready );
+        this._user.resetCollision();
+        this._stepManager.currentStep.resetCollision();
       }
     }
   }
