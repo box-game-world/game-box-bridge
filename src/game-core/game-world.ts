@@ -76,9 +76,9 @@ export default class GameWorld{
     this._initWorld();
     this._initStage( container );
     this._initUser();
-    this._initInputManager();
     this._initStepManager();
     this._initGround();
+    this._initInputManager();
     this._initWormholeBall();
     this._initWormholeBallIndicator();
     this._initCollisionProccess();
@@ -115,7 +115,7 @@ export default class GameWorld{
 
   private _initStepManager():void{
     this._stepManager = StepManager.getInstance();
-    this._stepManager.init( { world:this._world, user:this._user, stage:this.stage, rectangle:{ x:0, y:0, width:STAGE_WIDTH, height:STAGE_HEIGHT }, addBody:this._addBody.bind( this) } );
+    this._stepManager.init( { world:this._world, user:this._user, stage:this.stage, rectangle:{ x:0, y:0, width:STAGE_WIDTH, height:STAGE_HEIGHT-30 }, addBody:this._addBody.bind( this) } );
   }
 
   private _initGround():void{
@@ -127,7 +127,8 @@ export default class GameWorld{
 
   private _initUser():void{
     this._user = new User( this._world );
-    this._addBody( this._user );
+    setTimeout(()=>this._addBody( this._user ), 1 );
+    
   }
 
   private _initWormholeBall():void{
