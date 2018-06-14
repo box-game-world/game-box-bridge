@@ -25,6 +25,7 @@ export default class GameWorld{
 
   private _world:World;
   private _app:PIXI.Application;
+  private _objectWrapper:PIXI.Container
   private _worldEngine:Engine;
   private _user:User;
   private _ground:Ground;
@@ -45,6 +46,10 @@ export default class GameWorld{
 
   public get stage():PIXI.Container{
     return this._app.stage;
+  }
+
+  public get objectWrapper():PIXI.Container{
+    return this._objectWrapper;
   }
 
   public get view():HTMLCanvasElement{
@@ -70,7 +75,6 @@ export default class GameWorld{
   constructor( { container } ){
     this._initWorld();
     this._initStage( container );
-    
     this._initUser();
     this._initInputManager();
     this._initStepManager();
@@ -81,7 +85,7 @@ export default class GameWorld{
 
     this._stateManager = GameStateManager.getInstance();
     this._stateManager.init( this );
-    console.log( this.stage );
+    
   }
 
   private _initWorld():void{
@@ -99,6 +103,9 @@ export default class GameWorld{
     this.stage.width = STAGE_WIDTH;
     this.stage.height = STAGE_HEIGHT;
     this.app.ticker.add( this._update.bind( this ) ); 
+
+    this._objectWrapper = new PIXI.Container();
+    this.stage.addChild( this._objectWrapper );
   }
 
   private _initInputManager():void{
@@ -132,19 +139,18 @@ export default class GameWorld{
 
   private _initWormholeBallIndicator():void{
     this._wormholeBallIndicator = new WormholeBallIndicator( this._wormholeBall, { x:0, y:0, width:STAGE_WIDTH, height:STAGE_HEIGHT-this._ground.height } );
-    this.stage.addChild( this._wormholeBallIndicator ); 
+    this._objectWrapper.addChild( this._wormholeBallIndicator ); 
   }
 
   public _addBody( body:PhysicalBody ):void{
     this._bodies.push( body );
-    this.stage.addChild( body.sprite );
+    this._objectWrapper.addChild( body.sprite );
   }
 
   public translateX( value:number ):Promise<any>{
     return new Promise( ( res )=>{
-      TweenLite.to( this.stage, 0.5, { x:value, onComplete:()=>res });
-    } )
-    
+      TweenLite.to( this._objectWrapper, 0.5, { x:value, onComplete:()=>res });
+    } ) 
   }
 
   private _update( delta:number ):void{ 

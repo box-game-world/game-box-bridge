@@ -50,7 +50,6 @@ export default class WaitingUserSleepState extends State{
         this._stepManager.currentStep.resetCollision();
         
         if( this._stepManager.currentStep.leftTopX > this._user.leftTopX + this._user.width ){
-          console.log( '@@@' );
           this.gameWorld.translateX( Math.abs(this._user.leftTopX) + 10 );
         }else if( this._stepManager.nextStep.leftTopX + this._stepManager.nextStep.width  < this._user.leftTopX  ){
           this.gameWorld.translateX( GameWorld.GET_STAGE_SIZE().width -  (this._user.leftTopX + this._user.width + 10 ) );
