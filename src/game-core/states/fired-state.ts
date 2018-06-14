@@ -20,8 +20,7 @@ export default class FiredState extends State{
   private _ball:WormholeBall;
   private _user:User;
   private _ground:Ground;
-  private _minX:number;
-  private _maxX:number;
+  private _maxY:number;
   private _stepManager:StepManager;
   private _objectWrapper:PIXI.Container;
   private _collisionEnergyCharger:boolean;
@@ -34,8 +33,7 @@ export default class FiredState extends State{
     this._user = this.gameWorld.user;
     this._ground = this.gameWorld.ground;
     this._objectWrapper = this.gameWorld.objectWrapper;
-    this._minX = -GameWorld.GET_STAGE_SIZE().width;
-    this._maxX = GameWorld.GET_STAGE_SIZE().width*2;
+    this._maxY = GameWorld.GET_STAGE_SIZE().height;
     this._stepManager = StepManager.getInstance();
   }
 
@@ -76,7 +74,7 @@ export default class FiredState extends State{
       }
     }
 
-    if( this._ball.x >  this._maxX || this._ball.x < this._minX ){
+    if( this._ball.y > this._maxY ){
       gameStore.consumeEnergy( 100 );
       this.changeState( StateEnum.Ready );
     } 
