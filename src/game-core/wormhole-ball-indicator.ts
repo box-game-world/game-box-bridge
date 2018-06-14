@@ -36,18 +36,18 @@ export default class WormholeBallIndicator extends Sprite{
     this.addChild( this._graphics );
   }
 
-  public update():void{
+  public update( offsetX:number=0 ):void{
     const x:number = this._target.x;
     const y:number = this._target.y;
     let outLeft:boolean = false;
     let outRight:boolean = false;
     let outTop:boolean = false;
 
-    if( x < this._rectangle.x ){
+    if( x < this._rectangle.x - offsetX ){
       outLeft = true;
     }
     
-    if( x > this._rectangle.width ){
+    if( x > this._rectangle.width - offsetX ){
       outRight = true;
     }
     

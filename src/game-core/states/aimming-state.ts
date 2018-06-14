@@ -11,6 +11,7 @@ export default class AimmingState extends State{
   private _inputManager:InputManager = InputManager.getIntance();
   private _user:User;
   private _ball:WormholeBall;
+  private _maxDistance:number = 100;
 
   constructor( gameWorld:GameWorld, changeStateCallback:Function ){
     super( gameWorld, changeStateCallback );
@@ -32,7 +33,7 @@ export default class AimmingState extends State{
     const touchMovePosition:Position = this._inputManager.touchMovePosition;
     const xLength:number = touchMovePosition.x - touchStartPosition.x;
     const yLength:number = touchMovePosition.y - touchStartPosition.y;
-    const distance:number = ( Math.abs( xLength ) + Math.abs( yLength ) ) * 0.4;
+    const distance:number = Math.min( ( Math.abs( xLength ) + Math.abs( yLength ) ) * 0.4, this._maxDistance );
     const radian = Math.atan2( yLength, xLength );
     this._user.vector = { radian:radian, length:distance };
 

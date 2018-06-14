@@ -29,6 +29,7 @@ export default class ReadyState extends State{
     this._ball.hide();
     this._ball.setStatic( true );
     this._user.vector = { radian:0, length:0 };
+    this.gameWorld.wormholeBallIndicator.visible = false;
   }
 
   public update():void{

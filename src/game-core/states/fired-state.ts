@@ -20,9 +20,12 @@ export default class FiredState extends State{
   private _ball:WormholeBall;
   private _user:User;
   private _ground:Ground;
-  private _limitY:number;
+  private _minX:number;
+  private _maxX:number;
   private _stepManager:StepManager;
+  private _objectWrapper:PIXI.Container;
   private _collisionEnergyCharger:boolean;
+  
 
   constructor( gameWorld:GameWorld, changeStateCallback:Function ){
     super( gameWorld, changeStateCallback );
@@ -30,7 +33,9 @@ export default class FiredState extends State{
     this._ball = this.gameWorld.wormholeBall;
     this._user = this.gameWorld.user;
     this._ground = this.gameWorld.ground;
-    this._limitY = GameWorld.GET_STAGE_SIZE().height - this._ground.height;
+    this._objectWrapper = this.gameWorld.objectWrapper;
+    this._minX = -GameWorld.GET_STAGE_SIZE().width;
+    this._maxX = GameWorld.GET_STAGE_SIZE().width*2;
     this._stepManager = StepManager.getInstance();
   }
 
@@ -46,7 +51,8 @@ export default class FiredState extends State{
   }
 
   public update():void{
-    this._indicator.update();
+    console.log( this._objectWrapper.x );
+    this._indicator.update( this._objectWrapper.x );
     if( this._ball.isCollision ){
       const targetQueue:PhysicalBody[] = this._ball.collisionQueue;
       if( !this._collisionEnergyCharger ){
@@ -70,10 +76,10 @@ export default class FiredState extends State{
       }
     }
 
-    if( this._ball.y >  this._limitY ){
+    if( this._ball.x >  this._maxX || this._ball.x < this._minX ){
       gameStore.consumeEnergy( 100 );
       this.changeState( StateEnum.Ready );
-    }
+    } 
   }
 
   private _findCollisionTarget( queue:PhysicalBody[], label:string ):PhysicalBody{

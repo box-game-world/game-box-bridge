@@ -139,7 +139,7 @@ export default class GameWorld{
 
   private _initWormholeBallIndicator():void{
     this._wormholeBallIndicator = new WormholeBallIndicator( this._wormholeBall, { x:0, y:0, width:STAGE_WIDTH, height:STAGE_HEIGHT-this._ground.height } );
-    this._objectWrapper.addChild( this._wormholeBallIndicator ); 
+    this.stage.addChild( this._wormholeBallIndicator ); 
   }
 
   public _addBody( body:PhysicalBody ):void{
