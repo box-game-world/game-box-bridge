@@ -9,6 +9,8 @@ export default class EnergyBar extends PIXI.Sprite{
   private _maxEnergy:number;
   private _scale:number = 1;
   private _tweenSpeed:number = 0.6;
+  private _barWidth:number = 100;
+  private _barHeight:number = 20;
 
 	constructor(){
 		super();
@@ -19,13 +21,13 @@ export default class EnergyBar extends PIXI.Sprite{
 		this._bg = new PIXI.Graphics();
 		this.addChild( this._bg );
 		this._bg.beginFill( 0xefefef );
-		this._bg.drawRect( 0, 0, 150, 20 );
+		this._bg.drawRect( 0, 0, this._barWidth, this._barHeight );
 		this._bg.endFill();
 
 		this._bar = new PIXI.Graphics();
 		this.addChild( this._bar );
 		this._bar.beginFill( 0xdddddd );
-		this._bar.drawRect( 0, 0, 150, 20 );
+		this._bar.drawRect( 0, 0, this._barWidth, this._barHeight );
 		this._bar.endFill();
   }
 

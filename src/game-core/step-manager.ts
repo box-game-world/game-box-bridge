@@ -6,6 +6,7 @@ import { random } from 'lodash'
 import User from "./user";
 import {TweenLite} from "gsap/TweenMax";
 import EnergyCharger from "./energy-charger";
+import gameStore from "./store/game-store";
 
 const CREATION_SYMBOL = Symbol();
 export default class StepManager{
@@ -98,6 +99,8 @@ export default class StepManager{
       TweenLite.to( this._user, this._tweenSpeed, { leftTopX: userTargetLeftX, onComplete:res } );
 
       this._energyCharger.move( currentTargetLeftX + this._currentStep.width + this._energyCharger.width + random( 100 ), 10 + random( nextTargetLeftY - 10 ) ) ;
+
+      gameStore.nextStep();
     } );
   }
 }

@@ -11,6 +11,9 @@ export class GameStore{
   @observable
   private _maxEnergy:number = 1000;
 
+  @observable
+  private _step:number = 0;
+
   public static getInstance():GameStore{
     return this._instance || ( this._instance = new this() );
   }
@@ -25,6 +28,11 @@ export class GameStore{
     return this._maxEnergy;
   }
 
+  @computed
+  public get step():number{
+    return this._step;
+  }
+
   private constructor(){
   }
 
@@ -36,6 +44,11 @@ export class GameStore{
   @action
   public consumeEnergy( value:number ):void{
     this._energy = this._energy - value < 0 ? 0 : this._energy - value
+  }
+
+  @action
+  public nextStep():void{
+    this._step++;
   }
 }
 
