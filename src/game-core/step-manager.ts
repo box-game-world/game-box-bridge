@@ -15,7 +15,6 @@ export default class StepManager{
   private _prevStep:Step;
   private _currentStep:Step;
   private _nextStep:Step;
-  private _initialized:boolean = false;
   private _stage:PIXI.Container;
   private _user:User;
   private _rectangle:Rectangle;
@@ -73,7 +72,7 @@ export default class StepManager{
 
     this._energyCharger = new EnergyCharger( data.world );
     this._addBody( this._energyCharger );
-    this._energyCharger.show();
+    this._energyCharger.sprite.visible = false;
   }
 
   public next():Promise<any>{
@@ -98,7 +97,7 @@ export default class StepManager{
       TweenLite.to( this._nextStep, this._tweenSpeed, { leftTopX: nextTargetLeftX, leftTopY: nextTargetLeftY } );
       TweenLite.to( this._user, this._tweenSpeed, { leftTopX: userTargetLeftX, onComplete:res } );
 
-      this._energyCharger.move( currentTargetLeftX + this._currentStep.width + random( 100 ), 10 + random( nextTargetLeftY - 10 ) ) ;
+      this._energyCharger.move( currentTargetLeftX + this._currentStep.width + this._energyCharger.width + random( 100 ), 10 + random( nextTargetLeftY - 10 ) ) ;
     } );
   }
 }

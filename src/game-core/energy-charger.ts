@@ -58,7 +58,7 @@ export default class EnergyCharger extends PhysicalBody{
 
   public hit():Promise<any>{
     return new Promise( ( res,rej )=>{
-      TweenLite.to( this.graphics.scale, this._tweenSpeed, { ease: Back.easeIn.config(3), x: 0, y:0, onComplete:()=>{
+      TweenLite.to( this.graphics.scale, this._tweenSpeed/3, { ease: Back.easeIn.config(5), x: 0, y:0, onComplete:()=>{
         super.hide();
         res();
       } } );
