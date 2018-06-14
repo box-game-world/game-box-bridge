@@ -49,7 +49,6 @@ export default class FiredState extends State{
   }
 
   public update():void{
-    console.log( this._objectWrapper.x );
     this._indicator.update( this._objectWrapper.x );
     if( this._ball.isCollision ){
       const targetQueue:PhysicalBody[] = this._ball.collisionQueue;

@@ -5,6 +5,7 @@ import { StateEnum } from "../interfaces";
 import StepManager from "../step-manager";
 import WormholeBall from "../wormhole-ball";
 import User from "../user";
+import gameStore from "../store/game-store";
 
 export default class ReadyState extends State{
 
@@ -30,6 +31,10 @@ export default class ReadyState extends State{
     this._ball.setStatic( true );
     this._user.vector = { radian:0, length:0 };
     this.gameWorld.wormholeBallIndicator.visible = false;
+    
+    if( gameStore.energy <= 0 ){
+      console.log( 'game over' );
+    } 
   }
 
   public update():void{

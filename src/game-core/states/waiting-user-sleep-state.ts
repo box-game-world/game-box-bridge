@@ -45,7 +45,6 @@ export default class WaitingUserSleepState extends State{
           this._stepManager.nextStep.resetCollision();
         });
       }else{
-        this.changeState( StateEnum.Ready );
         this._user.resetCollision();
         this._stepManager.currentStep.resetCollision();
         
@@ -56,6 +55,8 @@ export default class WaitingUserSleepState extends State{
         }else{
           this.gameWorld.translateX( 0 );
         }
+
+        this.changeState( StateEnum.Ready );
       }
     }
   }
