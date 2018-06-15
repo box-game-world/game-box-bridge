@@ -27,5 +27,5 @@ export enum StateEnum{
   Aimming,
   Fired,
   WaitingUserSleep,
-  CreateNext,
+  GameOver
 }

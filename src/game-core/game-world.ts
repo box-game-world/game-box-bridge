@@ -3,20 +3,17 @@ import decomp from 'poly-decomp'
 ( window as any ).decomp = decomp;
 import * as PIXI from 'pixi.js'
 import User from './user'
-import { Engine, World, Bodies, Events, Body } from 'matter-js'
+import { Engine, World, Events, Body } from 'matter-js'
 import PhysicalBody from './physical-body';
 import InputManager from './input-manager';
 import WormholeBall from './wormhole-ball';
 import Ground from './ground';
-import GameConfig from './game-config';
 import WormholeBallIndicator from './wormhole-ball-indicator';
-import State from './states/abs-state';
-import ReadyState from './states/ready-state';
 import GameStateManager from './game-state-manager';
 import StepManager from './step-manager';
 import { forEach } from 'lodash';
-import gameStore from './store/game-store';
 import { TweenLite } from 'gsap';
+import gameStore from './store/game-store';
 
 const STAGE_WIDTH:number = 300;
 const STAGE_HEIGHT:number = 600;
@@ -73,6 +70,12 @@ export default class GameWorld{
   }
 
   constructor( { container } ){
+    this.init( container );
+  }
+
+  public init( container ):void{
+    console.log( this );
+    gameStore.init();
     this._initWorld();
     this._initStage( container );
     this._initUser();
@@ -81,11 +84,10 @@ export default class GameWorld{
     this._initInputManager();
     this._initWormholeBall();
     this._initWormholeBallIndicator();
-    this._initCollisionProccess();
+    this._initCollisionProcess();
 
     this._stateManager = GameStateManager.getInstance();
     this._stateManager.init( this );
-    
   }
 
   private _initWorld():void{
@@ -156,16 +158,16 @@ export default class GameWorld{
 
   private _update( delta:number ):void{ 
     this._stateManager.update();
-    this._proccessUpdate();
+    this._processUpdate();
   }
 
-  private _proccessUpdate():void{
+  private _processUpdate():void{
     for( let i=0, count=this._bodies.length ; i<count ; i+=1 ){
       this._bodies[ i ].update();
     }
   }
 
-  private _initCollisionProccess():void{
+  private _initCollisionProcess():void{
     Events.on( this._worldEngine, 'collisionStart', ( event )=>{
       forEach( event.pairs, ( pair )=>{
         const bodyA:Body = pair.bodyA;
@@ -176,5 +178,40 @@ export default class GameWorld{
         bodyB.collisionQueue.push(bodyA);
       } )
     }); 
+  }
+
+  private _destroy():void{
+    this._destroyStage();
+    this._destroyCollisionProcess();
+    this._destroyWorld();
+    this._destroyEngine();
+    this._destroyInputManager();
+  }
+
+  private _destroyStage():void{
+    this._app.stage.removeAllListeners();
+    this._app.stage.removeChildren();
+    this._app.ticker.stop();
+    this._app.destroy( true );
+    this._app = null;
+  }
+
+  private _destroyInputManager():void{
+    this._inputManager.destroy();
+  }
+
+  private _destroyWorld():void{
+    World.clear( this._world );
+    this._world = null;
+    this._bodies = [];
+  }
+
+  private _destroyEngine():void{
+    Engine.clear( this._worldEngine );
+    this._worldEngine = null;
+  }
+
+  private _destroyCollisionProcess():void{
+    Events.off( this._worldEngine );
   }
 }

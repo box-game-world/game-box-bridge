@@ -1,12 +1,12 @@
 import State from "./states/abs-state";
 import GameWorld from "./game-world";
 import ReadyState from "./states/ready-state";
-import { stat } from "fs";
 import { StateEnum } from "./interfaces";
 import AimmingState from "./states/aimming-state";
 import FiredState from "./states/fired-state";
 import WaitingUserSleepState from "./states/waiting-user-sleep-state";
-import CreateNextState from "./states/create-next";
+import GameOverState from "./states/game-over-state";
+import gameStore from "./store/game-store";
 
 const CREATION_SYMBOL = Symbol();
 
@@ -17,10 +17,10 @@ export default class GameStateManager{
   private _aimmingState:AimmingState;
   private _firedState:FiredState;
   private _waitingUserSleepState:WaitingUserSleepState;
-  private _createNextState:CreateNextState;
+  private _gameOverState:GameOverState;
+  
 
   private _gameWorld:GameWorld;
-  private _initialized:boolean = false
 
   public static getInstance():GameStateManager{
     if( !GameStateManager._instance ){
@@ -38,7 +38,6 @@ export default class GameStateManager{
   public init( gameWorld:GameWorld ):void{
     this._gameWorld = gameWorld;
     this._initStates();
-    this._initialized = true;
   }
 
   public update():void{
@@ -51,7 +50,7 @@ export default class GameStateManager{
     this._aimmingState = new AimmingState( this._gameWorld, setStateCallback );
     this._firedState = new FiredState( this._gameWorld, setStateCallback );
     this._waitingUserSleepState = new WaitingUserSleepState( this._gameWorld, setStateCallback );
-    this._createNextState = new CreateNextState( this._gameWorld, setStateCallback );
+    this._gameOverState = new GameOverState( this._gameWorld, setStateCallback );
     this._currentState = this._readyState;
     this._currentState.mounted();
   }
@@ -63,10 +62,11 @@ export default class GameStateManager{
       case StateEnum.Aimming:  state = this._aimmingState; break;
       case StateEnum.Fired:  state = this._firedState; break;
       case StateEnum.WaitingUserSleep:  state = this._waitingUserSleepState; break;
-      case StateEnum.CreateNext:  state = this._createNextState; break;
+      case StateEnum.GameOver:  state = this._waitingUserSleepState; break;
     }
 
     if( state ){
+      gameStore.changeState( stateType );
       if( this._currentState ){
         this._currentState.destroyed();
       }

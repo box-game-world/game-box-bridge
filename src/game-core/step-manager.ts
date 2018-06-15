@@ -16,7 +16,6 @@ export default class StepManager{
   private _prevStep:Step;
   private _currentStep:Step;
   private _nextStep:Step;
-  private _stage:PIXI.Container;
   private _user:User;
   private _rectangle:Rectangle;
   private _addBody:Function;
@@ -49,7 +48,6 @@ export default class StepManager{
   }
 
   public init( data:{ world:World, user:User, stage:PIXI.Container, rectangle:Rectangle, addBody:Function } ){
-    this._stage = data.stage;
     this._rectangle = data.rectangle;
     this._user = data.user;
     this._prevStep = new Step( data.world );

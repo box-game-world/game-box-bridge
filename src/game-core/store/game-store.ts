@@ -1,18 +1,25 @@
 
 
 import { observable, computed, action } from 'mobx';
+import { StateEnum } from '../interfaces';
 
 export class GameStore{
   private static _instance:GameStore;
   
   @observable
-  private _energy:number = 1000;
+  private _energy:number;
 
   @observable
-  private _maxEnergy:number = 1000;
+  private _maxEnergy:number;
 
   @observable
-  private _step:number = 0;
+  private _step:number;
+
+  @observable
+  private _state:StateEnum;
+
+  @observable
+  private _isLiving:boolean;
 
   public static getInstance():GameStore{
     return this._instance || ( this._instance = new this() );
@@ -33,7 +40,30 @@ export class GameStore{
     return this._step;
   }
 
+  @computed
+  public get state():StateEnum{
+    return this._state;
+  }
+
+  @computed
+  public get isLiving():boolean{
+    return this._isLiving;
+  }
+
+  public set isLiving( value:boolean){
+    this._isLiving = value;
+  }
+
   private constructor(){
+    this.init();
+  }
+
+  @action
+  public init():void{
+    this._energy = 1000;
+    this._maxEnergy = 1000;
+    this._step = 0;
+    this._isLiving = true;
   }
 
   @action
@@ -49,6 +79,11 @@ export class GameStore{
   @action
   public nextStep():void{
     this._step++;
+  }
+
+  @action
+  public changeState( state:StateEnum ):void{
+    this._state = state;
   }
 }
 

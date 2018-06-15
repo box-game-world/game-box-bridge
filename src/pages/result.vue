@@ -4,7 +4,7 @@
   <div class="card h-100 main-wrapper">
     <div class="card-header game-title">
       <h1 class="text-center pt-5 pb-5 m-0"> 
-          WORMHOLE
+          RESULT
         </h1>    
     </div>
     <div class="card-block h-100 text-center pt-5">

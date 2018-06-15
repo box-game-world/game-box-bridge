@@ -81,4 +81,8 @@ export default class InputManager{
 
     this._initialized = true;
   }
+
+  public destroy():void{
+    this._initialized = false;
+  }
 }
