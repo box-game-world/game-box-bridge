@@ -11,6 +11,7 @@ export default class GameUI extends PIXI.Sprite{
 	private _energyBar:EnergyBar;
   private _app:PIXI.Application;
   private _stepText:PIXI.Text;
+  private _autoruns:Function[] = [];
 
 	public get stage():PIXI.Container{
     return this._app.stage;
@@ -54,8 +55,14 @@ export default class GameUI extends PIXI.Sprite{
       const tempY = this._stepText.y;
       this._stepText.text = gameStore.step.toString();
       this._stepText.x = STAGE_WIDTH - this._stepText.width - 10;
-      this._stepText.y = this._stepText.y+3;
+      this._stepText.y = this._stepText.y + 3;
       TweenLite.to( this._stepText, 0.3, { ease: Back.easeOut.config(10), y:tempY } );
     } );
+  }
+
+  public destroy():void{
+    while( this._autoruns.length ){
+      this._autoruns.shift()();
+    }
   }
 }

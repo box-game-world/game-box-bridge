@@ -13,6 +13,8 @@ import Component from 'vue-class-component'
 import * as PIXI from 'pixi.js' 
 import GameWorld from '@/game-core/game-world.ts'
 import GameUI from '@/game-core/components/ui/game-ui';
+import gameStore from '../../game-core/store/game-store';
+import { reaction } from 'mobx';
 
 @Component({})
 export default class World extends Vue{
@@ -32,6 +34,14 @@ export default class World extends Vue{
   initWorld():void{
     this._gameWorld = new GameWorld( {container:this.$refs.game_world_wrapper} );
     this._gameUI = new GameUI( {container:this.$refs.game_ui_wrapper} );
+
+    const gameOverReactionDisposer:Function = reaction( ()=>gameStore.isLiving, ()=>{ 
+      this.$emit( 'game_over' );
+      this._gameWorld.destroy();
+      this._gameUI.destroy();
+      gameOverReactionDisposer();
+      
+    })
   }
 }
 </script>

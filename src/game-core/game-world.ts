@@ -74,7 +74,6 @@ export default class GameWorld{
   }
 
   public init( container ):void{
-    console.log( this );
     gameStore.init();
     this._initWorld();
     this._initStage( container );
@@ -180,7 +179,7 @@ export default class GameWorld{
     }); 
   }
 
-  private _destroy():void{
+  public destroy():void{
     this._destroyStage();
     this._destroyCollisionProcess();
     this._destroyWorld();

@@ -50,10 +50,6 @@ export class GameStore{
     return this._isLiving;
   }
 
-  public set isLiving( value:boolean){
-    this._isLiving = value;
-  }
-
   private constructor(){
     this.init();
   }
@@ -84,6 +80,11 @@ export class GameStore{
   @action
   public changeState( state:StateEnum ):void{
     this._state = state;
+  }
+
+  @action
+  public end():void{
+    this._isLiving = false;
   }
 }
 

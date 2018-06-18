@@ -8,9 +8,7 @@ import User from "../user";
 import gameStore from "../store/game-store";
 
 export default class ReadyState extends State{
-
   private _inputManager:InputManager = InputManager.getIntance();
-  private _stepManager:StepManager = StepManager.getInstance();
   private _ball:WormholeBall;
   private _user:User;
 
@@ -33,7 +31,7 @@ export default class ReadyState extends State{
     this.gameWorld.wormholeBallIndicator.visible = false;
     
     if( gameStore.energy <= 0 ){
-      console.log( 'game over' );
+      this.changeState( StateEnum.GameOver );
     } 
   }
 

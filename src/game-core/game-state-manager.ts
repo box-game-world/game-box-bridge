@@ -62,7 +62,7 @@ export default class GameStateManager{
       case StateEnum.Aimming:  state = this._aimmingState; break;
       case StateEnum.Fired:  state = this._firedState; break;
       case StateEnum.WaitingUserSleep:  state = this._waitingUserSleepState; break;
-      case StateEnum.GameOver:  state = this._waitingUserSleepState; break;
+      case StateEnum.GameOver:  state = this._gameOverState; break;
     }
 
     if( state ){
