@@ -8,7 +8,6 @@ import {TweenLite} from "gsap/TweenMax";
 import EnergyCharger from "./energy-charger";
 import gameStore from "./store/game-store";
 
-const CREATION_SYMBOL = Symbol();
 export default class StepManager{
 
   private static _instance:StepManager;
@@ -36,15 +35,12 @@ export default class StepManager{
 
   public static getInstance():StepManager{
     if( !StepManager._instance ){
-      StepManager._instance = new StepManager( CREATION_SYMBOL );
+      StepManager._instance = new StepManager();
     }
     return StepManager._instance;
   }
 
-  constructor( symbol:Symbol ){
-    if( symbol !== CREATION_SYMBOL ){
-      throw new Error( 'getInstance 클래스 메소드를 이용해 객체를 생성해주세요.' );
-    }
+  private constructor(){
   }
 
   public init( data:{ world:World, user:User, stage:PIXI.Container, rectangle:Rectangle, addBody:Function } ){

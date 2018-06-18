@@ -1,8 +1,7 @@
 import * as PIXI from 'pixi.js'
-import { Rectangle, Vertex, Vector, Position } from './interfaces'
-import GameConfig from './game-config'
+import { Rectangle, Vector, Position } from './interfaces'
 
-const CREATION_SYMBOL = Symbol();
+
 export default class InputManager{
  
   private static _instance:InputManager;
@@ -10,14 +9,13 @@ export default class InputManager{
   private _touchStartPosition:Position = { x:0, y:0 };
   private _touchMovePosition:Position = { x:0, y:0 };
   private _touchEndPosition:Position = { x:0, y:0 };
-  private _angle:number = 0;
   private _vector:Vector = { radian:0, length:0 };
   private _availableVector:boolean;
   private _initialized:boolean = false;
 
   public static getIntance():InputManager{
     if( !InputManager._instance ){
-      InputManager._instance = new InputManager( CREATION_SYMBOL );
+      InputManager._instance = new InputManager();
     }
     return InputManager._instance;
   }
@@ -46,10 +44,7 @@ export default class InputManager{
     return this._availableVector;
   }
 
-  constructor( symbol:Symbol ){
-    if( symbol !== CREATION_SYMBOL ){
-      throw new Error( 'getInstance 클래스 메소드를 이용해 객체를 생성해주세요.' );
-    }
+  private constructor(){
   }
 
   public init( data:{ stage:PIXI.Container, rectangle:Rectangle }):void{

@@ -8,7 +8,6 @@ import WaitingUserSleepState from "./states/waiting-user-sleep-state";
 import GameOverState from "./states/game-over-state";
 import gameStore from "./store/game-store";
 
-const CREATION_SYMBOL = Symbol();
 
 export default class GameStateManager{
   private static _instance:GameStateManager;
@@ -24,15 +23,12 @@ export default class GameStateManager{
 
   public static getInstance():GameStateManager{
     if( !GameStateManager._instance ){
-      GameStateManager._instance = new GameStateManager( CREATION_SYMBOL );
+      GameStateManager._instance = new GameStateManager();
     }
     return GameStateManager._instance;
   }
 
-  constructor( symbol:Symbol ){
-    if( symbol !== CREATION_SYMBOL ){
-      throw new Error( 'getInstance 클래스 메소드를 이용해 객체를 생성해주세요.' );
-    }
+  private constructor(){
   }
 
   public init( gameWorld:GameWorld ):void{
