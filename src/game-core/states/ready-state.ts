@@ -2,7 +2,6 @@ import State from "./abs-state";
 import GameWorld from "../game-world";
 import InputManager from "../input-manager";
 import { StateEnum } from "../interfaces";
-import StepManager from "../step-manager";
 import WormholeBall from "../wormhole-ball";
 import User from "../user";
 import gameStore from "../store/game-store";

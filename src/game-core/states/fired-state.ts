@@ -1,13 +1,10 @@
 import State from "./abs-state";
 import GameWorld from "../game-world";
-import InputManager from "../input-manager";
-import { StateEnum, Position } from "../interfaces";
+import { StateEnum } from "../interfaces";
 import User from "../user";
-import GameConfig from "../game-config";
 
 import WormholeBallIndicator from "../wormhole-ball-indicator";
 import WormholeBall from "../wormhole-ball";
-import Ground from "../ground";
 import StepManager from "../step-manager";
 import { find, remove } from 'lodash';
 import PhysicalBody from "../physical-body";
@@ -23,7 +20,7 @@ export default class FiredState extends State{
   private _stepManager:StepManager;
   private _objectWrapper:PIXI.Container;
   private _collisionEnergyCharger:boolean;
-  private _consumeValue:number = 500;
+  private _consumeValue:number = 100;
   
 
   constructor( gameWorld:GameWorld, changeStateCallback:Function ){

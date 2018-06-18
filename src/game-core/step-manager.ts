@@ -1,6 +1,5 @@
 import Step from "./step";
 import { Rectangle } from "./interfaces";
-import { Recoverable } from "repl";
 import { World } from 'matter-js'
 import { random } from 'lodash'
 import User from "./user";

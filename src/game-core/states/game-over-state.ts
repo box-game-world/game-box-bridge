@@ -1,6 +1,5 @@
 import State from "./abs-state";
 import GameWorld from "../game-world";
-import User from "../user";
 import gameStore from "../store/game-store";
 
 export default class GameOverState extends State{

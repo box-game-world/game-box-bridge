@@ -1,7 +1,7 @@
 
 import { Vertex, Vector } from './interfaces'
 import PhysicalBody from './physical-body'
-import { World, Events, Body } from 'matter-js'
+import { World } from 'matter-js'
 import { Container } from 'pixi.js';
 import GameConfig from './game-config';
 

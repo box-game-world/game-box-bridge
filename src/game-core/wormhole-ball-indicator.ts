@@ -1,6 +1,5 @@
 
 import { Graphics, Sprite } from 'pixi.js';
-import GameWorld from './game-world';
 import WormholeBall from './wormhole-ball';
 import { Rectangle } from './interfaces';
 

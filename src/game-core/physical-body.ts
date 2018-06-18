@@ -2,7 +2,7 @@
 
 
 import * as PIXI from 'pixi.js'
-import { Bodies, Body, World, Sleeping } from 'matter-js'
+import { Bodies, Body, World } from 'matter-js'
 import { Vertex } from './interfaces'
 
 export default class PhysicalBody{

@@ -1,8 +1,7 @@
 
 import { Vertex, Vector } from './interfaces'
 import PhysicalBody from './physical-body'
-import { World, Events, Bodies, Body, Sleeping } from 'matter-js'
-import { Container } from 'pixi.js';
+import { World, Bodies, Body} from 'matter-js'
 
 export default class WormholeBall extends PhysicalBody{
 
