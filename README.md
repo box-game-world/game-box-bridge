@@ -11,5 +11,5 @@ npm run dev
 
 ```
 
-##사용기술
+## 사용기술
 #Typescript  #Canvas  #Webpack  #Vue  #Pixi  #Matterjs  #Mobx  #HTML  #CSS
